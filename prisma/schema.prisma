@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Static lookup table for Brazilian regions
+model Region {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50)
+  code      String   @unique @db.VarChar(20)
+  colorHex  String   @map("color_hex") @db.VarChar(7)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  calendarDays CalendarDay[]
+  hotels       Hotel[]
+
+  @@map("regions")
+}
+
+// 38 days of the trip (Jan 1 - Feb 7, 2026)
+model CalendarDay {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @unique @db.Date
+  regionId  Int?     @map("region_id")
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  region   Region?   @relation(fields: [regionId], references: [id], onDelete: SetNull)
+  events   Event[]
+  expenses Expense[]
+
+  @@map("calendar_days")
+}
+
+// Flight bookings
+model Flight {
+  id                 Int      @id @default(autoincrement())
+  airline            String   @db.VarChar(100)
+  flightNumber       String   @map("flight_number") @db.VarChar(20)
+  departureCity      String   @map("departure_city") @db.VarChar(100)
+  arrivalCity        String   @map("arrival_city") @db.VarChar(100)
+  departureDatetime  DateTime @map("departure_datetime")
+  arrivalDatetime    DateTime @map("arrival_datetime")
+  confirmationNumber String?  @map("confirmation_number") @db.VarChar(50)
+  price              Decimal? @db.Decimal(10, 2)
+  currency           String   @default("BRL") @db.VarChar(3)
+  notes              String?  @db.Text
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  @@map("flights")
+}
+
+// Hotel/accommodation bookings
+model Hotel {
+  id                 Int      @id @default(autoincrement())
+  name               String   @db.VarChar(200)
+  address            String?  @db.Text
+  city               String?  @db.VarChar(100)
+  regionId           Int?     @map("region_id")
+  checkInDate        DateTime @map("check_in_date") @db.Date
+  checkOutDate       DateTime @map("check_out_date") @db.Date
+  confirmationNumber String?  @map("confirmation_number") @db.VarChar(50)
+  pricePerNight      Decimal? @map("price_per_night") @db.Decimal(10, 2)
+  totalCost          Decimal? @map("total_cost") @db.Decimal(10, 2)
+  currency           String   @default("BRL") @db.VarChar(3)
+  notes              String?  @db.Text
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  region Region? @relation(fields: [regionId], references: [id], onDelete: SetNull)
+
+  @@map("hotels")
+}
+
+// Expense categories with per-category budget limits
+model ExpenseCategory {
+  id                       Int      @id @default(autoincrement())
+  name                     String   @unique @db.VarChar(50)
+  icon                     String?  @db.VarChar(50)
+  colorHex                 String?  @map("color_hex") @db.VarChar(7)
+  budgetLimit              Decimal? @map("budget_limit") @db.Decimal(10, 2)
+  warningThresholdPercent  Int      @default(80) @map("warning_threshold_percent")
+  createdAt                DateTime @default(now()) @map("created_at")
+
+  expenses Expense[]
+
+  @@map("expense_categories")
+}
+
+// Individual expenses
+model Expense {
+  id            Int      @id @default(autoincrement())
+  date          DateTime @db.Date
+  amountBrl     Decimal  @map("amount_brl") @db.Decimal(10, 2)
+  categoryId    Int      @map("category_id")
+  description   String?  @db.Text
+  calendarDayId Int?     @map("calendar_day_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  category    ExpenseCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  calendarDay CalendarDay?    @relation(fields: [calendarDayId], references: [id], onDelete: SetNull)
+
+  @@map("expenses")
+}
+
+// App-wide settings (singleton table)
+model AppSettings {
+  id             Int      @id @default(1)
+  exchangeRate   Decimal  @default(5.4) @map("exchange_rate") @db.Decimal(6, 2)
+  totalBudgetBrl Decimal? @map("total_budget_brl") @db.Decimal(12, 2)
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("app_settings")
+}
+
+// Events/activities scheduled for specific days
+model Event {
+  id            Int      @id @default(autoincrement())
+  calendarDayId Int      @map("calendar_day_id")
+  title         String   @db.VarChar(200)
+  description   String?  @db.Text
+  startTime     DateTime? @map("start_time") @db.Time()
+  endTime       DateTime? @map("end_time") @db.Time()
+  location      String?  @db.VarChar(200)
+  category      String?  @db.VarChar(50)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  calendarDay CalendarDay @relation(fields: [calendarDayId], references: [id], onDelete: Cascade)
+
+  @@map("events")
+}

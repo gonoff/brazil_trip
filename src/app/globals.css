@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+:root {
+  /* Base colors - Light mode */
+  --background: 0 0% 100%;
+  --foreground: 220 13% 18%;
+
+  /* Card/Popover */
+  --card: 0 0% 100%;
+  --card-foreground: 220 13% 18%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 13% 18%;
+
+  /* Primary - Yellow */
+  --primary: 45 93% 56%;
+  --primary-foreground: 220 13% 18%;
+
+  /* Secondary */
+  --secondary: 220 13% 95%;
+  --secondary-foreground: 220 13% 18%;
+
+  /* Muted */
+  --muted: 220 13% 95%;
+  --muted-foreground: 220 13% 40%;
+
+  /* Accent - Dark Green */
+  --accent: 142 64% 15%;
+  --accent-foreground: 0 0% 100%;
+
+  /* Destructive */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* Border/Input/Ring */
+  --border: 220 13% 90%;
+  --input: 220 13% 90%;
+  --ring: 45 93% 56%;
+
+  /* Radius */
+  --radius: 0.5rem;
+
+  /* Region colors */
+  --region-sao-paulo: #FBBF24;
+  --region-minas-gerais: #166534;
+  --region-goias: #1E40AF;
+  --region-santa-catarina: #F97316;
+
+  /* Chart colors */
+  --chart-1: 45 93% 56%;
+  --chart-2: 142 64% 15%;
+  --chart-3: 224 76% 40%;
+  --chart-4: 24 95% 53%;
+  --chart-5: 262 83% 58%;
+}
+
+.dark {
+  --background: 220 13% 8%;
+  --foreground: 220 13% 95%;
+
+  --card: 220 13% 10%;
+  --card-foreground: 220 13% 95%;
+  --popover: 220 13% 10%;
+  --popover-foreground: 220 13% 95%;
+
+  --primary: 45 93% 56%;
+  --primary-foreground: 220 13% 18%;
+
+  --secondary: 220 13% 15%;
+  --secondary-foreground: 220 13% 95%;
+
+  --muted: 220 13% 15%;
+  --muted-foreground: 220 13% 60%;
+
+  --accent: 142 64% 25%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 220 13% 20%;
+  --input: 220 13% 20%;
+  --ring: 45 93% 56%;
+}
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Region color utilities */
+.bg-region-sao-paulo { background-color: var(--region-sao-paulo); }
+.bg-region-minas-gerais { background-color: var(--region-minas-gerais); }
+.bg-region-goias { background-color: var(--region-goias); }
+.bg-region-santa-catarina { background-color: var(--region-santa-catarina); }
+
+.text-region-sao-paulo { color: var(--region-sao-paulo); }
+.text-region-minas-gerais { color: var(--region-minas-gerais); }
+.text-region-goias { color: var(--region-goias); }
+.text-region-santa-catarina { color: var(--region-santa-catarina); }
+
+.border-region-sao-paulo { border-color: var(--region-sao-paulo); }
+.border-region-minas-gerais { border-color: var(--region-minas-gerais); }
+.border-region-goias { border-color: var(--region-goias); }
+.border-region-santa-catarina { border-color: var(--region-santa-catarina); }
