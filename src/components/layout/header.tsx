@@ -11,6 +11,9 @@ import {
   CalendarCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { CurrencyConverter } from "@/components/widgets/currency-converter";
+import { SearchCommand } from "@/components/widgets/search-command";
 
 const navLinks = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -34,7 +37,7 @@ export function Header() {
           <span className="font-bold text-lg hidden sm:block">Brazil Trip</span>
         </Link>
 
-        <nav className="flex items-center gap-1 overflow-x-auto">
+        <nav className="flex items-center gap-1 overflow-x-auto flex-1">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
@@ -57,6 +60,13 @@ export function Header() {
             );
           })}
         </nav>
+
+        {/* Right side actions */}
+        <div className="flex items-center gap-1">
+          <SearchCommand />
+          <CurrencyConverter />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

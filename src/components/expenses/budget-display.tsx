@@ -135,10 +135,10 @@ export function BudgetDisplay({
                   <Badge variant="destructive">Over Budget</Badge>
                 )}
                 {overallStatus === BUDGET_STATUS.WARNING && (
-                  <Badge className="bg-yellow-500">Warning</Badge>
+                  <Badge className="bg-[#C9A227] text-white">Warning</Badge>
                 )}
                 {overallStatus === BUDGET_STATUS.OK && (
-                  <Badge className="bg-green-600">On Track</Badge>
+                  <Badge className="bg-accent">On Track</Badge>
                 )}
               </>
             )}
@@ -160,7 +160,7 @@ export function BudgetDisplay({
                 overallStatus === BUDGET_STATUS.EXCEEDED
                   ? "[&>div]:bg-destructive"
                   : overallStatus === BUDGET_STATUS.WARNING
-                  ? "[&>div]:bg-yellow-500"
+                  ? "[&>div]:bg-[#C9A227]"
                   : ""
               }
             />

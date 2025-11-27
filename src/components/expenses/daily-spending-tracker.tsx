@@ -180,7 +180,7 @@ export function DailySpendingTracker({
                               </Badge>
                             )}
                             {status === BUDGET_STATUS.WARNING && (
-                              <Badge className="bg-yellow-500 text-xs">
+                              <Badge className="bg-[#C9A227] text-white text-xs">
                                 Warning
                               </Badge>
                             )}
@@ -201,7 +201,7 @@ export function DailySpendingTracker({
                               status === BUDGET_STATUS.EXCEEDED
                                 ? "[&>div]:bg-destructive"
                                 : status === BUDGET_STATUS.WARNING
-                                ? "[&>div]:bg-yellow-500"
+                                ? "[&>div]:bg-[#C9A227]"
                                 : ""
                             }`}
                           />

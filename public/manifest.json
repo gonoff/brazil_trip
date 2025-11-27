@@ -4,8 +4,8 @@
   "description": "Plan your adventure across Brazil - January to February 2026",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#FBBF24",
+  "background_color": "#F5F0E8",
+  "theme_color": "#C45C32",
   "orientation": "portrait-primary",
   "scope": "/",
   "icons": [

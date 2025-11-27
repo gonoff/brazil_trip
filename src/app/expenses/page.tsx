@@ -14,6 +14,7 @@ import {
 import { ExpenseForm } from "@/components/expenses/expense-form";
 import { BudgetDisplay } from "@/components/expenses/budget-display";
 import { DailySpendingTracker } from "@/components/expenses/daily-spending-tracker";
+import { ExpenseAnalytics } from "@/components/expenses/expense-analytics";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -116,8 +117,9 @@ export default function ExpensesPage() {
       <Tabs defaultValue="list" className="w-full">
         <TabsList>
           <TabsTrigger value="list">Expenses</TabsTrigger>
-          <TabsTrigger value="daily">Daily Tracker</TabsTrigger>
+          <TabsTrigger value="daily">Daily</TabsTrigger>
           <TabsTrigger value="budget">Budget</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
         <TabsContent value="list" className="space-y-4 mt-4">
@@ -211,6 +213,16 @@ export default function ExpensesPage() {
               settings={settings}
               onUpdateCategory={handleUpdateCategory}
               onUpdateSettings={handleUpdateSettings}
+            />
+          )}
+        </TabsContent>
+
+        <TabsContent value="analytics" className="mt-4">
+          {expenses && categories && settings && (
+            <ExpenseAnalytics
+              expenses={expenses}
+              categories={categories}
+              settings={settings}
             />
           )}
         </TabsContent>

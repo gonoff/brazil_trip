@@ -5,106 +5,106 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding database...');
 
-  // Seed regions
+  // Seed regions (Earthy tones)
   const regions = await Promise.all([
     prisma.region.upsert({
       where: { code: 'sao-paulo' },
-      update: {},
+      update: { colorHex: '#C9A227' },
       create: {
         name: 'São Paulo',
         code: 'sao-paulo',
-        colorHex: '#FBBF24', // Yellow
+        colorHex: '#C9A227', // Golden ochre
       },
     }),
     prisma.region.upsert({
       where: { code: 'minas-gerais' },
-      update: {},
+      update: { colorHex: '#2D5A3D' },
       create: {
         name: 'Minas Gerais',
         code: 'minas-gerais',
-        colorHex: '#166534', // Dark Green
+        colorHex: '#2D5A3D', // Forest green
       },
     }),
     prisma.region.upsert({
       where: { code: 'goias' },
-      update: {},
+      update: { colorHex: '#8B6914' },
       create: {
         name: 'Goiás',
         code: 'goias',
-        colorHex: '#1E40AF', // Dark Blue
+        colorHex: '#8B6914', // Bronze/olive
       },
     }),
     prisma.region.upsert({
       where: { code: 'santa-catarina' },
-      update: {},
+      update: { colorHex: '#B85C38' },
       create: {
         name: 'Santa Catarina',
         code: 'santa-catarina',
-        colorHex: '#F97316', // Orange
+        colorHex: '#B85C38', // Terracotta
       },
     }),
   ]);
   console.log(`Created ${regions.length} regions`);
 
-  // Seed expense categories (no daily budgets - just tracking by category)
+  // Seed expense categories (Earthy tones)
   const categories = await Promise.all([
     prisma.expenseCategory.upsert({
       where: { name: 'Food' },
-      update: {},
+      update: { colorHex: '#B85C38' },
       create: {
         name: 'Food',
         icon: 'utensils',
-        colorHex: '#EF4444',
+        colorHex: '#B85C38', // Terracotta
         warningThresholdPercent: 80,
       },
     }),
     prisma.expenseCategory.upsert({
       where: { name: 'Transportation' },
-      update: {},
+      update: { colorHex: '#5C7A6B' },
       create: {
         name: 'Transportation',
         icon: 'car',
-        colorHex: '#3B82F6',
+        colorHex: '#5C7A6B', // Sage green
         warningThresholdPercent: 80,
       },
     }),
     prisma.expenseCategory.upsert({
       where: { name: 'Accommodation' },
-      update: {},
+      update: { colorHex: '#8B6914' },
       create: {
         name: 'Accommodation',
         icon: 'bed',
-        colorHex: '#8B5CF6',
+        colorHex: '#8B6914', // Bronze
         warningThresholdPercent: 80,
       },
     }),
     prisma.expenseCategory.upsert({
       where: { name: 'Activities' },
-      update: {},
+      update: { colorHex: '#2D5A3D' },
       create: {
         name: 'Activities',
         icon: 'ticket',
-        colorHex: '#10B981',
+        colorHex: '#2D5A3D', // Forest green
         warningThresholdPercent: 80,
       },
     }),
     prisma.expenseCategory.upsert({
       where: { name: 'Shopping' },
-      update: {},
+      update: { colorHex: '#C9A227' },
       create: {
         name: 'Shopping',
         icon: 'shopping-bag',
-        colorHex: '#F59E0B',
+        colorHex: '#C9A227', // Golden ochre
         warningThresholdPercent: 80,
       },
     }),
     prisma.expenseCategory.upsert({
       where: { name: 'Other' },
-      update: {},
+      update: { colorHex: '#8B7355' },
       create: {
         name: 'Other',
         icon: 'more-horizontal',
-        colorHex: '#6B7280',
+        colorHex: '#8B7355', // Warm taupe
         warningThresholdPercent: 80,
       },
     }),

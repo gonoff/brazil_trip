@@ -8,12 +8,12 @@ export const TRIP_DATES = {
 // Default exchange rate (BRL to USD)
 export const DEFAULT_EXCHANGE_RATE = 5.4;
 
-// Region definitions with colors
+// Region definitions with colors (Earthy tones)
 export const REGIONS = {
   'sao-paulo': {
     name: 'São Paulo',
     code: 'sao-paulo',
-    colorHex: '#FBBF24',
+    colorHex: '#C9A227', // Golden ochre
     colorClass: 'bg-region-sao-paulo',
     textClass: 'text-region-sao-paulo',
     borderClass: 'border-region-sao-paulo',
@@ -21,7 +21,7 @@ export const REGIONS = {
   'minas-gerais': {
     name: 'Minas Gerais',
     code: 'minas-gerais',
-    colorHex: '#166534',
+    colorHex: '#2D5A3D', // Forest green
     colorClass: 'bg-region-minas-gerais',
     textClass: 'text-region-minas-gerais',
     borderClass: 'border-region-minas-gerais',
@@ -29,7 +29,7 @@ export const REGIONS = {
   'goias': {
     name: 'Goiás',
     code: 'goias',
-    colorHex: '#1E40AF',
+    colorHex: '#8B6914', // Bronze/olive
     colorClass: 'bg-region-goias',
     textClass: 'text-region-goias',
     borderClass: 'border-region-goias',
@@ -37,7 +37,7 @@ export const REGIONS = {
   'santa-catarina': {
     name: 'Santa Catarina',
     code: 'santa-catarina',
-    colorHex: '#F97316',
+    colorHex: '#B85C38', // Terracotta
     colorClass: 'bg-region-santa-catarina',
     textClass: 'text-region-santa-catarina',
     borderClass: 'border-region-santa-catarina',
