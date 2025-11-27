@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { OfflineIndicator } from "@/components/offline-indicator";
 import { Providers } from "@/components/providers";
 
 const geistSans = Geist({
@@ -58,6 +59,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
         <Providers>
+          <OfflineIndicator />
           <Header />
           <main className="container mx-auto px-4 py-6 pb-24 md:pb-6">{children}</main>
           <BottomNav />

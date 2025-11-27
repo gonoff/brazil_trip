@@ -161,9 +161,9 @@ export function TripCalendar({
             return (
               <div
                 key={index}
-                className="min-h-[60px] md:min-h-[80px] p-1 md:p-2 border border-border/50 rounded-lg bg-muted/30 opacity-30"
+                className="aspect-square w-full p-1.5 md:p-2 border border-border/50 rounded-lg bg-muted/30 opacity-30 flex flex-col items-center justify-start"
               >
-                <span className="text-xs md:text-sm text-muted-foreground">
+                <span className="text-base md:text-lg font-bold text-muted-foreground">
                   {format(date, "d")}
                 </span>
               </div>

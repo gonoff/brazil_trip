@@ -141,3 +141,17 @@ model Event {
 
   @@map("events")
 }
+
+// Push notification subscriptions
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  endpoint  String   @db.VarChar(500)
+  p256dh    String   @db.VarChar(200)
+  auth      String   @db.VarChar(50)
+  userAgent String?  @map("user_agent") @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([endpoint])
+  @@map("push_subscriptions")
+}

@@ -8,7 +8,8 @@
       "Bash(npm run db:seed:*)",
       "Bash(npx prisma:*)",
       "Bash(find:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

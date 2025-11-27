@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CalendarDay } from "@/types";
 import { RegionCode } from "@/lib/constants";
+import { checkOnlineStatus } from "@/lib/offline-utils";
 
 async function fetchCalendarDays(): Promise<CalendarDay[]> {
   const response = await fetch("/api/calendar-days");
@@ -38,13 +39,16 @@ export function useUpdateCalendarDay() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       id,
       data,
     }: {
       id: number;
       data: { regionCode?: RegionCode | null; notes?: string };
-    }) => updateCalendarDay(id, data),
+    }) => {
+      checkOnlineStatus();
+      return updateCalendarDay(id, data);
+    },
     onSuccess: (updatedDay) => {
       // Update the cache with the new day data
       queryClient.setQueryData<CalendarDay[]>(["calendarDays"], (old) => {

@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Hotel, HotelFormData } from "@/types";
+import { checkOnlineStatus } from "@/lib/offline-utils";
 
 async function fetchHotels(): Promise<Hotel[]> {
   const response = await fetch("/api/hotels");
@@ -47,7 +48,10 @@ export function useCreateHotel() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: createHotel,
+    mutationFn: async (data: HotelFormData) => {
+      checkOnlineStatus();
+      return createHotel(data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["hotels"] });
     },
@@ -58,8 +62,10 @@ export function useUpdateHotel() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<HotelFormData> }) =>
-      updateHotel(id, data),
+    mutationFn: async ({ id, data }: { id: number; data: Partial<HotelFormData> }) => {
+      checkOnlineStatus();
+      return updateHotel(id, data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["hotels"] });
     },
@@ -70,7 +76,10 @@ export function useDeleteHotel() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteHotel,
+    mutationFn: async (id: number) => {
+      checkOnlineStatus();
+      return deleteHotel(id);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["hotels"] });
     },

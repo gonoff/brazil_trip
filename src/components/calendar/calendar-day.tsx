@@ -36,7 +36,7 @@ export function CalendarDayCell({
     <button
       onClick={onClick}
       className={cn(
-        "relative flex flex-col items-center justify-start p-1 md:p-2 min-h-[60px] md:min-h-[80px] border border-border rounded-lg transition-all",
+        "relative flex flex-col items-center justify-start p-1.5 md:p-2 aspect-square w-full border border-border rounded-lg transition-all",
         "hover:ring-2 hover:ring-primary hover:ring-offset-1",
         !isCurrentMonth && "opacity-40",
         isSelected && "ring-2 ring-primary ring-offset-2",
@@ -48,7 +48,7 @@ export function CalendarDayCell({
     >
       <span
         className={cn(
-          "text-xs md:text-sm font-medium",
+          "text-base md:text-lg font-bold",
           region ? "text-white" : "text-foreground"
         )}
       >

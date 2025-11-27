@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Expense, ExpenseFormData, ExpenseCategory, AppSettings } from "@/types";
+import { checkOnlineStatus } from "@/lib/offline-utils";
 
 // Expenses
 async function fetchExpenses(): Promise<Expense[]> {
@@ -46,7 +47,10 @@ export function useCreateExpense() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: createExpense,
+    mutationFn: async (data: ExpenseFormData) => {
+      checkOnlineStatus();
+      return createExpense(data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["expenseCategories"] });
@@ -58,8 +62,10 @@ export function useUpdateExpense() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<ExpenseFormData> }) =>
-      updateExpense(id, data),
+    mutationFn: async ({ id, data }: { id: number; data: Partial<ExpenseFormData> }) => {
+      checkOnlineStatus();
+      return updateExpense(id, data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["expenseCategories"] });
@@ -71,7 +77,10 @@ export function useDeleteExpense() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteExpense,
+    mutationFn: async (id: number) => {
+      checkOnlineStatus();
+      return deleteExpense(id);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["expenseCategories"] });
@@ -110,13 +119,16 @@ export function useUpdateExpenseCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       id,
       data,
     }: {
       id: number;
       data: { dailyBudgetPerPerson?: number; warningThresholdPercent?: number };
-    }) => updateExpenseCategory(id, data),
+    }) => {
+      checkOnlineStatus();
+      return updateExpenseCategory(id, data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenseCategories"] });
     },
@@ -151,7 +163,10 @@ export function useUpdateSettings() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: updateSettings,
+    mutationFn: async (data: Partial<AppSettings>) => {
+      checkOnlineStatus();
+      return updateSettings(data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
     },

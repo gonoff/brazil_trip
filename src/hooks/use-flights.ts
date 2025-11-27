@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Flight, FlightFormData } from "@/types";
+import { checkOnlineStatus } from "@/lib/offline-utils";
 
 async function fetchFlights(): Promise<Flight[]> {
   const response = await fetch("/api/flights");
@@ -47,7 +48,10 @@ export function useCreateFlight() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: createFlight,
+    mutationFn: async (data: FlightFormData) => {
+      checkOnlineStatus();
+      return createFlight(data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["flights"] });
     },
@@ -58,8 +62,10 @@ export function useUpdateFlight() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<FlightFormData> }) =>
-      updateFlight(id, data),
+    mutationFn: async ({ id, data }: { id: number; data: Partial<FlightFormData> }) => {
+      checkOnlineStatus();
+      return updateFlight(id, data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["flights"] });
     },
@@ -70,7 +76,10 @@ export function useDeleteFlight() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteFlight,
+    mutationFn: async (id: number) => {
+      checkOnlineStatus();
+      return deleteFlight(id);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["flights"] });
     },

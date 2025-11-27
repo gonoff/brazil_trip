@@ -19,6 +19,7 @@ import {
 import { useDashboard } from "@/hooks/use-dashboard";
 import { useExpenses, useExpenseCategories, useSettings } from "@/hooks/use-expenses";
 import { DailySpendingTracker } from "@/components/expenses/daily-spending-tracker";
+import { NotificationSettings } from "@/components/notification-settings";
 import { TRIP_DATES, REGIONS, RegionCode, getBudgetStatus, BUDGET_STATUS } from "@/lib/constants";
 import { formatBRL, convertToUSD, formatUSD, formatUTCDate } from "@/lib/utils";
 import { format } from "date-fns";
@@ -52,20 +53,23 @@ export function DashboardContent() {
   return (
     <div className="space-y-8">
       {/* Hero Section */}
-      <div className="bg-primary/10 border border-primary/20 rounded-xl p-8 text-center">
-        <h1 className="text-4xl font-bold mb-2">Brazil Trip Planner</h1>
-        <p className="text-xl text-muted-foreground mb-4">
+      <div className="bg-primary/10 border border-primary/20 rounded-xl p-6 sm:p-8 text-center">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-2">Brazil Trip Planner</h1>
+        <p className="text-lg sm:text-xl text-muted-foreground mb-4">
           January 6 - February 3, 2026 • {TRIP_DATES.totalDays} days
         </p>
-        <div className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full text-lg font-medium">
-          {daysUntilTrip > 0 ? (
-            <>
-              <span>{daysUntilTrip}</span>
-              <span className="text-primary-foreground/80">days until departure</span>
-            </>
-          ) : (
-            <span>Trip in progress!</span>
-          )}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full text-lg font-medium">
+            {daysUntilTrip > 0 ? (
+              <>
+                <span>{daysUntilTrip}</span>
+                <span className="text-primary-foreground/80">days until departure</span>
+              </>
+            ) : (
+              <span>Trip in progress!</span>
+            )}
+          </div>
+          <NotificationSettings />
         </div>
       </div>
 

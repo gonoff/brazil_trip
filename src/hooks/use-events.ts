@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Event, EventFormData } from "@/types";
+import { checkOnlineStatus } from "@/lib/offline-utils";
 
 async function fetchEvents(): Promise<Event[]> {
   const response = await fetch("/api/events");
@@ -45,7 +46,10 @@ export function useCreateEvent() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: createEvent,
+    mutationFn: async (data: EventFormData) => {
+      checkOnlineStatus();
+      return createEvent(data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["calendarDays"] });
@@ -57,8 +61,10 @@ export function useUpdateEvent() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<EventFormData> }) =>
-      updateEvent(id, data),
+    mutationFn: async ({ id, data }: { id: number; data: Partial<EventFormData> }) => {
+      checkOnlineStatus();
+      return updateEvent(id, data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["calendarDays"] });
@@ -70,7 +76,10 @@ export function useDeleteEvent() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteEvent,
+    mutationFn: async (id: number) => {
+      checkOnlineStatus();
+      return deleteEvent(id);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["calendarDays"] });
