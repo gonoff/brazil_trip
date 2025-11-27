@@ -17,12 +17,17 @@ import {
   MapPin,
 } from "lucide-react";
 import { useDashboard } from "@/hooks/use-dashboard";
+import { useExpenses, useExpenseCategories, useSettings } from "@/hooks/use-expenses";
+import { DailySpendingTracker } from "@/components/expenses/daily-spending-tracker";
 import { TRIP_DATES, REGIONS, RegionCode, getBudgetStatus, BUDGET_STATUS } from "@/lib/constants";
-import { formatBRL, convertToUSD, formatUSD } from "@/lib/utils";
+import { formatBRL, convertToUSD, formatUSD, formatUTCDate } from "@/lib/utils";
 import { format } from "date-fns";
 
 export function DashboardContent() {
   const { data: stats, isLoading, error } = useDashboard();
+  const { data: expenses } = useExpenses();
+  const { data: categories } = useExpenseCategories();
+  const { data: settings } = useSettings();
 
   const daysUntilTrip = Math.ceil(
     (TRIP_DATES.start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
@@ -50,7 +55,7 @@ export function DashboardContent() {
       <div className="bg-primary/10 border border-primary/20 rounded-xl p-8 text-center">
         <h1 className="text-4xl font-bold mb-2">Brazil Trip Planner</h1>
         <p className="text-xl text-muted-foreground mb-4">
-          January 1 - February 7, 2026 • {TRIP_DATES.totalDays} days
+          January 6 - February 3, 2026 • {TRIP_DATES.totalDays} days
         </p>
         <div className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full text-lg font-medium">
           {daysUntilTrip > 0 ? (
@@ -189,7 +194,7 @@ export function DashboardContent() {
                       <div className="font-medium text-sm truncate">{event.title}</div>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         {event.calendarDay && (
-                          <span>{format(new Date(event.calendarDay.date), "MMM d")}</span>
+                          <span>{formatUTCDate(event.calendarDay.date, "MMM d")}</span>
                         )}
                         {event.startTime && (
                           <span className="flex items-center gap-1">
@@ -209,6 +214,15 @@ export function DashboardContent() {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {/* Daily Spending Tracker */}
+      {expenses && categories && settings && expenses.length > 0 && (
+        <DailySpendingTracker
+          expenses={expenses}
+          categories={categories}
+          settings={settings}
+        />
       )}
 
       {/* Quick Actions */}

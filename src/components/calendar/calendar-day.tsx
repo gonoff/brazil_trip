@@ -4,6 +4,7 @@ import { format, isSameMonth } from "date-fns";
 import { cn } from "@/lib/utils";
 import { CalendarDay as CalendarDayType } from "@/types";
 import { REGIONS } from "@/lib/constants";
+import { Plane, Building2, PlaneTakeoff, PlaneLanding } from "lucide-react";
 
 interface CalendarDayProps {
   date: Date;
@@ -24,6 +25,12 @@ export function CalendarDayCell({
   const regionCode = calendarDay?.region?.code as keyof typeof REGIONS | undefined;
   const region = regionCode ? REGIONS[regionCode] : null;
   const eventsCount = calendarDay?.eventsCount || 0;
+
+  const hasFlightDeparture = calendarDay?.hasFlightDeparture;
+  const hasFlightArrival = calendarDay?.hasFlightArrival;
+  const hasHotelCheckIn = calendarDay?.hasHotelCheckIn;
+  const hasHotelCheckOut = calendarDay?.hasHotelCheckOut;
+  const hasHotelStay = calendarDay?.hasHotelStay;
 
   return (
     <button
@@ -53,6 +60,36 @@ export function CalendarDayCell({
           {region.name.split(" ")[0]}
         </span>
       )}
+
+      {/* Icons row for flights and hotels */}
+      <div className="flex items-center gap-0.5 mt-auto mb-1">
+        {hasFlightDeparture && (
+          <PlaneTakeoff
+            className={cn(
+              "h-3.5 w-3.5",
+              region ? "text-white/90" : "text-blue-500"
+            )}
+          />
+        )}
+        {hasFlightArrival && (
+          <PlaneLanding
+            className={cn(
+              "h-3.5 w-3.5",
+              region ? "text-white/90" : "text-blue-500"
+            )}
+          />
+        )}
+        {(hasHotelCheckIn || hasHotelStay) && (
+          <Building2
+            className={cn(
+              "h-3.5 w-3.5",
+              hasHotelCheckIn
+                ? (region ? "text-white" : "text-amber-600")
+                : (region ? "text-white/70" : "text-amber-400")
+            )}
+          />
+        )}
+      </div>
 
       {eventsCount > 0 && (
         <div

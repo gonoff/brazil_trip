@@ -15,11 +15,17 @@ export async function GET() {
           id: 1,
           exchangeRate: 5.4,
           totalBudgetBrl: 10000,
+          numberOfTravelers: 3,
         },
       });
     }
 
-    return NextResponse.json(settings);
+    // Convert Decimal fields to numbers
+    return NextResponse.json({
+      ...settings,
+      exchangeRate: parseFloat(settings.exchangeRate.toString()),
+      totalBudgetBrl: settings.totalBudgetBrl ? parseFloat(settings.totalBudgetBrl.toString()) : null,
+    });
   } catch (error) {
     console.error("Error fetching settings:", error);
     return NextResponse.json(
@@ -33,22 +39,29 @@ export async function GET() {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { exchangeRate, totalBudgetBrl } = body;
+    const { exchangeRate, totalBudgetBrl, numberOfTravelers } = body;
 
     const settings = await prisma.appSettings.upsert({
       where: { id: 1 },
       update: {
         exchangeRate: exchangeRate !== undefined ? parseFloat(exchangeRate) : undefined,
         totalBudgetBrl: totalBudgetBrl !== undefined ? (totalBudgetBrl ? parseFloat(totalBudgetBrl) : null) : undefined,
+        numberOfTravelers: numberOfTravelers !== undefined ? parseInt(numberOfTravelers, 10) : undefined,
       },
       create: {
         id: 1,
         exchangeRate: exchangeRate ? parseFloat(exchangeRate) : 5.4,
         totalBudgetBrl: totalBudgetBrl ? parseFloat(totalBudgetBrl) : 10000,
+        numberOfTravelers: numberOfTravelers ? parseInt(numberOfTravelers, 10) : 3,
       },
     });
 
-    return NextResponse.json(settings);
+    // Convert Decimal fields to numbers
+    return NextResponse.json({
+      ...settings,
+      exchangeRate: parseFloat(settings.exchangeRate.toString()),
+      totalBudgetBrl: settings.totalBudgetBrl ? parseFloat(settings.totalBudgetBrl.toString()) : null,
+    });
   } catch (error) {
     console.error("Error updating settings:", error);
     return NextResponse.json(

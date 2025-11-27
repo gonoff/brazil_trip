@@ -46,7 +46,7 @@ async function main() {
   ]);
   console.log(`Created ${regions.length} regions`);
 
-  // Seed expense categories with default budget limits
+  // Seed expense categories (no daily budgets - just tracking by category)
   const categories = await Promise.all([
     prisma.expenseCategory.upsert({
       where: { name: 'Food' },
@@ -55,7 +55,6 @@ async function main() {
         name: 'Food',
         icon: 'utensils',
         colorHex: '#EF4444',
-        budgetLimit: 2000,
         warningThresholdPercent: 80,
       },
     }),
@@ -66,7 +65,6 @@ async function main() {
         name: 'Transportation',
         icon: 'car',
         colorHex: '#3B82F6',
-        budgetLimit: 1500,
         warningThresholdPercent: 80,
       },
     }),
@@ -77,7 +75,6 @@ async function main() {
         name: 'Accommodation',
         icon: 'bed',
         colorHex: '#8B5CF6',
-        budgetLimit: 3000,
         warningThresholdPercent: 80,
       },
     }),
@@ -88,7 +85,6 @@ async function main() {
         name: 'Activities',
         icon: 'ticket',
         colorHex: '#10B981',
-        budgetLimit: 2000,
         warningThresholdPercent: 80,
       },
     }),
@@ -99,7 +95,6 @@ async function main() {
         name: 'Shopping',
         icon: 'shopping-bag',
         colorHex: '#F59E0B',
-        budgetLimit: 1000,
         warningThresholdPercent: 80,
       },
     }),
@@ -110,16 +105,15 @@ async function main() {
         name: 'Other',
         icon: 'more-horizontal',
         colorHex: '#6B7280',
-        budgetLimit: 500,
         warningThresholdPercent: 80,
       },
     }),
   ]);
   console.log(`Created ${categories.length} expense categories`);
 
-  // Seed calendar days (January 1 - February 7, 2026)
-  const startDate = new Date('2026-01-01');
-  const endDate = new Date('2026-02-07');
+  // Seed calendar days (January 6 - February 3, 2026)
+  const startDate = new Date('2026-01-06');
+  const endDate = new Date('2026-02-03');
   const calendarDays = [];
 
   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
@@ -141,11 +135,12 @@ async function main() {
   // Seed app settings
   await prisma.appSettings.upsert({
     where: { id: 1 },
-    update: {},
+    update: { numberOfTravelers: 3 },
     create: {
       id: 1,
       exchangeRate: 5.4,
       totalBudgetBrl: 10000, // R$10,000 default total budget
+      numberOfTravelers: 3, // 2 adults + 1 baby
     },
   });
   console.log('Created app settings');

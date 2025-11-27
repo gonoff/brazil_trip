@@ -32,11 +32,8 @@ export async function GET() {
       })
     );
 
-    // Calculate total budget and spent
-    const totalBudget = categoriesWithSpent.reduce(
-      (sum, cat) => sum + (cat.budgetLimit?.toNumber() || 0),
-      0
-    );
+    // Calculate total budget from settings and total spent
+    const totalBudget = settings.totalBudgetBrl?.toNumber() || 0;
     const totalSpent = categoriesWithSpent.reduce(
       (sum, cat) => sum + cat.spent,
       0
@@ -86,8 +83,9 @@ export async function GET() {
     const expensesByCategory = categoriesWithSpent.map((cat) => ({
       category: cat,
       spent: cat.spent,
-      percentage: cat.budgetLimit
-        ? (cat.spent / cat.budgetLimit.toNumber()) * 100
+      // Calculate percentage based on daily budget × days × travelers (if daily budget set)
+      percentage: cat.dailyBudgetPerPerson
+        ? (cat.spent / (cat.dailyBudgetPerPerson.toNumber() * TRIP_DATES.totalDays * (settings.numberOfTravelers || 3))) * 100
         : 0,
     }));
 

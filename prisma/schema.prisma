@@ -81,15 +81,15 @@ model Hotel {
   @@map("hotels")
 }
 
-// Expense categories with per-category budget limits
+// Expense categories with daily per-person budgets
 model ExpenseCategory {
-  id                       Int      @id @default(autoincrement())
-  name                     String   @unique @db.VarChar(50)
-  icon                     String?  @db.VarChar(50)
-  colorHex                 String?  @map("color_hex") @db.VarChar(7)
-  budgetLimit              Decimal? @map("budget_limit") @db.Decimal(10, 2)
-  warningThresholdPercent  Int      @default(80) @map("warning_threshold_percent")
-  createdAt                DateTime @default(now()) @map("created_at")
+  id                     Int      @id @default(autoincrement())
+  name                   String   @unique @db.VarChar(50)
+  icon                   String?  @db.VarChar(50)
+  colorHex               String?  @map("color_hex") @db.VarChar(7)
+  dailyBudgetPerPerson   Decimal? @map("daily_budget_per_person") @db.Decimal(10, 2)
+  warningThresholdPercent Int     @default(80) @map("warning_threshold_percent")
+  createdAt              DateTime @default(now()) @map("created_at")
 
   expenses Expense[]
 
@@ -115,10 +115,11 @@ model Expense {
 
 // App-wide settings (singleton table)
 model AppSettings {
-  id             Int      @id @default(1)
-  exchangeRate   Decimal  @default(5.4) @map("exchange_rate") @db.Decimal(6, 2)
-  totalBudgetBrl Decimal? @map("total_budget_brl") @db.Decimal(12, 2)
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  id                Int      @id @default(1)
+  exchangeRate      Decimal  @default(5.4) @map("exchange_rate") @db.Decimal(6, 2)
+  totalBudgetBrl    Decimal? @map("total_budget_brl") @db.Decimal(12, 2)
+  numberOfTravelers Int      @default(3) @map("number_of_travelers")
+  updatedAt         DateTime @updatedAt @map("updated_at")
 
   @@map("app_settings")
 }

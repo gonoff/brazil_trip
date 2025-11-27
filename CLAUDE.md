@@ -73,7 +73,36 @@ src/
 - Currency: All amounts in BRL with USD conversion (default rate: 5.4)
 - Region colors: São Paulo (yellow #FBBF24), Minas Gerais (green #166534), Goiás (blue #1E40AF), Santa Catarina (orange #F97316)
 
+### Data Flow
+1. **Frontend**: React components use custom hooks from `src/hooks/`
+2. **Hooks**: TanStack Query hooks fetch from `/api/*` routes, handle caching (1min stale time)
+3. **API Routes**: Next.js route handlers in `src/app/api/` perform CRUD via Prisma
+4. **Database**: Prisma ORM connects to MySQL, schema in `prisma/schema.prisma`
+
+### Database Models
+- **Region**: Lookup table for 4 Brazilian regions (seeded)
+- **CalendarDay**: 38 trip days, optionally linked to a region
+- **Flight/Hotel**: Booking records with dates, prices, confirmation numbers
+- **ExpenseCategory**: Categories with per-category budget limits and warning thresholds
+- **Expense**: Individual expenses linked to category and optionally to a calendar day
+- **Event**: Activities scheduled for specific calendar days
+- **AppSettings**: Singleton for exchange rate and total budget
+
 ### Database Setup
 1. Set `DATABASE_URL` in `.env` to your MySQL connection string
 2. Run `npx prisma migrate dev` to create tables
 3. Run `npm run db:seed` to populate initial data (regions, categories, calendar days)
+
+## Development Environment Notes
+
+This project is developed on a Steam Deck with the following setup:
+
+- **MySQL**: LAMPP/XAMPP at `/opt/lampp/`
+  - MySQL upgrade: `/opt/lampp/bin/mysql_upgrade`
+  - Config: `/opt/lampp/etc/my.cnf`
+- **VS Code**: Running as flatpak - system commands require `flatpak-spawn --host`
+- **MySQL CLI**: Not in PATH. Use Node.js with `mysql2` package for database operations, or access via phpMyAdmin
+- **Database creation**: Use Node.js script since `mysql` CLI unavailable:
+  ```javascript
+  node -e "const mysql = require('mysql2/promise'); (async () => { const conn = await mysql.createConnection({host: 'localhost', user: 'root'}); await conn.query('CREATE DATABASE IF NOT EXISTS brazil_trip'); await conn.end(); })();"
+  ```

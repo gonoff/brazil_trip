@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Expense, ExpenseCategory } from "@/types";
 import { format } from "date-fns";
+import { formatUTCDate } from "@/lib/utils";
 
 const expenseSchema = z.object({
   date: z.string().min(1, "Date is required"),
@@ -62,7 +64,7 @@ export function ExpenseForm({
     resolver: zodResolver(expenseSchema),
     defaultValues: expense
       ? {
-          date: format(new Date(expense.date), "yyyy-MM-dd"),
+          date: formatUTCDate(expense.date, "yyyy-MM-dd"),
           amountBrl: expense.amountBrl.toString(),
           categoryId: expense.categoryId.toString(),
           description: expense.description || "",
@@ -76,6 +78,25 @@ export function ExpenseForm({
   });
 
   const categoryId = watch("categoryId");
+
+  // Reset form when expense prop changes (for editing)
+  useEffect(() => {
+    if (expense) {
+      reset({
+        date: formatUTCDate(expense.date, "yyyy-MM-dd"),
+        amountBrl: expense.amountBrl.toString(),
+        categoryId: expense.categoryId.toString(),
+        description: expense.description || "",
+      });
+    } else {
+      reset({
+        date: format(new Date(), "yyyy-MM-dd"),
+        amountBrl: "",
+        categoryId: "",
+        description: "",
+      });
+    }
+  }, [expense, reset]);
 
   const handleFormSubmit = async (data: ExpenseFormValues) => {
     await onSubmit(data);

@@ -1,8 +1,8 @@
 // Trip date range
 export const TRIP_DATES = {
-  start: new Date('2026-01-01'),
-  end: new Date('2026-02-07'),
-  totalDays: 38,
+  start: new Date('2026-01-06'),
+  end: new Date('2026-02-03'),
+  totalDays: 29,
 } as const;
 
 // Default exchange rate (BRL to USD)

@@ -9,16 +9,17 @@ import {
   useExpenseCategories,
   useUpdateExpenseCategory,
   useSettings,
+  useUpdateSettings,
 } from "@/hooks/use-expenses";
 import { ExpenseForm } from "@/components/expenses/expense-form";
 import { BudgetDisplay } from "@/components/expenses/budget-display";
+import { DailySpendingTracker } from "@/components/expenses/daily-spending-tracker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Loader2, Wallet, Edit, Trash2 } from "lucide-react";
 import { Expense, ExpenseFormData } from "@/types";
-import { format } from "date-fns";
-import { formatBRL, convertToUSD, formatUSD } from "@/lib/utils";
+import { formatBRL, convertToUSD, formatUSD, formatUTCDate } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,12 +40,13 @@ export default function ExpensesPage() {
   const updateExpense = useUpdateExpense();
   const deleteExpense = useDeleteExpense();
   const updateCategory = useUpdateExpenseCategory();
+  const updateSettings = useUpdateSettings();
 
   const [formOpen, setFormOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
 
-  const exchangeRate = settings?.exchangeRate ? Number(settings.exchangeRate) : 5.4;
+  const exchangeRate = settings?.exchangeRate ?? 5.4;
 
   const handleCreate = async (data: ExpenseFormData) => {
     await createExpense.mutateAsync(data);
@@ -62,8 +64,12 @@ export default function ExpensesPage() {
     setDeleteConfirmId(null);
   };
 
-  const handleUpdateCategory = async (id: number, budgetLimit: number) => {
-    await updateCategory.mutateAsync({ id, data: { budgetLimit } });
+  const handleUpdateCategory = async (id: number, dailyBudgetPerPerson: number) => {
+    await updateCategory.mutateAsync({ id, data: { dailyBudgetPerPerson } });
+  };
+
+  const handleUpdateSettings = async (data: Partial<typeof settings>) => {
+    await updateSettings.mutateAsync(data as Parameters<typeof updateSettings.mutateAsync>[0]);
   };
 
   const isLoading = expensesLoading || categoriesLoading;
@@ -97,6 +103,7 @@ export default function ExpensesPage() {
       <Tabs defaultValue="list" className="w-full">
         <TabsList>
           <TabsTrigger value="list">Expenses</TabsTrigger>
+          <TabsTrigger value="daily">Daily Tracker</TabsTrigger>
           <TabsTrigger value="budget">Budget</TabsTrigger>
         </TabsList>
 
@@ -134,7 +141,7 @@ export default function ExpensesPage() {
                             </p>
                           )}
                           <p className="text-xs text-muted-foreground">
-                            {format(new Date(expense.date), "MMM d, yyyy")}
+                            {formatUTCDate(expense.date, "MMM d, yyyy")}
                           </p>
                         </div>
                       </div>
@@ -174,12 +181,23 @@ export default function ExpensesPage() {
           )}
         </TabsContent>
 
+        <TabsContent value="daily" className="mt-4">
+          {expenses && categories && settings && (
+            <DailySpendingTracker
+              expenses={expenses}
+              categories={categories}
+              settings={settings}
+            />
+          )}
+        </TabsContent>
+
         <TabsContent value="budget" className="mt-4">
-          {categories && (
+          {categories && settings && (
             <BudgetDisplay
               categories={categories}
-              exchangeRate={exchangeRate}
+              settings={settings}
               onUpdateCategory={handleUpdateCategory}
+              onUpdateSettings={handleUpdateSettings}
             />
           )}
         </TabsContent>

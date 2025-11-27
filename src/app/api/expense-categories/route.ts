@@ -21,7 +21,8 @@ export async function GET() {
 
         return {
           ...category,
-          spent: spent._sum.amountBrl?.toNumber() || 0,
+          dailyBudgetPerPerson: category.dailyBudgetPerPerson ? parseFloat(category.dailyBudgetPerPerson.toString()) : null,
+          spent: spent._sum.amountBrl ? parseFloat(spent._sum.amountBrl.toString()) : 0,
           _count: undefined,
         };
       })
@@ -37,21 +38,24 @@ export async function GET() {
   }
 }
 
-// PUT /api/expense-categories - Update category budget limits
+// PUT /api/expense-categories - Update category daily budget per person
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { id, budgetLimit, warningThresholdPercent } = body;
+    const { id, dailyBudgetPerPerson, warningThresholdPercent } = body;
 
     const category = await prisma.expenseCategory.update({
       where: { id },
       data: {
-        budgetLimit: budgetLimit !== undefined ? parseFloat(budgetLimit) : undefined,
+        dailyBudgetPerPerson: dailyBudgetPerPerson !== undefined ? parseFloat(dailyBudgetPerPerson) : undefined,
         warningThresholdPercent: warningThresholdPercent !== undefined ? warningThresholdPercent : undefined,
       },
     });
 
-    return NextResponse.json(category);
+    return NextResponse.json({
+      ...category,
+      dailyBudgetPerPerson: category.dailyBudgetPerPerson ? parseFloat(category.dailyBudgetPerPerson.toString()) : null,
+    });
   } catch (error) {
     console.error("Error updating expense category:", error);
     return NextResponse.json(

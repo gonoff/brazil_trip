@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -78,6 +79,35 @@ export function FlightForm({
           notes: "",
         },
   });
+
+  // Reset form when flight prop changes (for edit mode)
+  useEffect(() => {
+    if (flight) {
+      reset({
+        airline: flight.airline,
+        flightNumber: flight.flightNumber,
+        departureCity: flight.departureCity,
+        arrivalCity: flight.arrivalCity,
+        departureDatetime: format(new Date(flight.departureDatetime), "yyyy-MM-dd'T'HH:mm"),
+        arrivalDatetime: format(new Date(flight.arrivalDatetime), "yyyy-MM-dd'T'HH:mm"),
+        confirmationNumber: flight.confirmationNumber || "",
+        price: flight.price?.toString() || "",
+        notes: flight.notes || "",
+      });
+    } else {
+      reset({
+        airline: "",
+        flightNumber: "",
+        departureCity: "",
+        arrivalCity: "",
+        departureDatetime: "",
+        arrivalDatetime: "",
+        confirmationNumber: "",
+        price: "",
+        notes: "",
+      });
+    }
+  }, [flight, reset]);
 
   const handleFormSubmit = async (data: FlightFormValues) => {
     await onSubmit(data);

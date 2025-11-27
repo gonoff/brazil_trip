@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flatpak-spawn --host sudo -S systemctl status mariadb)",
+      "Bash(flatpak-spawn --host sudo:*)",
+      "Bash(flatpak-spawn --host ps:*)",
+      "Bash(npm run db:push:*)",
+      "Bash(npm run db:seed:*)",
+      "Bash(npx prisma:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

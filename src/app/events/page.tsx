@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Loader2, CalendarCheck, Edit, Trash2, Clock, MapPin } from "lucide-react";
 import { Event, EventFormData } from "@/types";
+import { formatUTCDate } from "@/lib/utils";
 import { format } from "date-fns";
 import {
   AlertDialog,
@@ -71,7 +72,7 @@ export default function EventsPage() {
   // Group events by date
   const eventsByDate = events?.reduce((acc, event) => {
     const dateKey = event.calendarDay
-      ? format(new Date(event.calendarDay.date), "yyyy-MM-dd")
+      ? formatUTCDate(event.calendarDay.date, "yyyy-MM-dd")
       : "unscheduled";
     if (!acc[dateKey]) acc[dateKey] = [];
     acc[dateKey].push(event);
@@ -112,7 +113,7 @@ export default function EventsPage() {
                 <div className="flex items-center gap-2 mb-3">
                   <h2 className="font-semibold">
                     {calendarDay
-                      ? format(new Date(calendarDay.date), "EEEE, MMMM d, yyyy")
+                      ? formatUTCDate(calendarDay.date, "EEEE, MMMM d, yyyy")
                       : "Unscheduled"}
                   </h2>
                   {region && (

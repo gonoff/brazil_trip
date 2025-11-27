@@ -18,6 +18,12 @@ export interface CalendarDay {
   region?: Region | null;
   events?: Event[];
   eventsCount?: number;
+  // For calendar display
+  hasFlightDeparture?: boolean;
+  hasFlightArrival?: boolean;
+  hasHotelCheckIn?: boolean;
+  hasHotelCheckOut?: boolean;
+  hasHotelStay?: boolean;
 }
 
 // Flight types
@@ -89,7 +95,7 @@ export interface ExpenseCategory {
   name: string;
   icon: string | null;
   colorHex: string | null;
-  budgetLimit: number | null;
+  dailyBudgetPerPerson: number | null;
   warningThresholdPercent: number;
   createdAt: Date;
   spent?: number;
@@ -147,6 +153,7 @@ export interface AppSettings {
   id: number;
   exchangeRate: number;
   totalBudgetBrl: number | null;
+  numberOfTravelers: number;
   updatedAt: Date;
 }
 

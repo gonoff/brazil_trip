@@ -88,7 +88,7 @@ async function fetchExpenseCategories(): Promise<ExpenseCategory[]> {
 
 async function updateExpenseCategory(
   id: number,
-  data: { budgetLimit?: number; warningThresholdPercent?: number }
+  data: { dailyBudgetPerPerson?: number; warningThresholdPercent?: number }
 ): Promise<ExpenseCategory> {
   const response = await fetch("/api/expense-categories", {
     method: "PUT",
@@ -115,7 +115,7 @@ export function useUpdateExpenseCategory() {
       data,
     }: {
       id: number;
-      data: { budgetLimit?: number; warningThresholdPercent?: number };
+      data: { dailyBudgetPerPerson?: number; warningThresholdPercent?: number };
     }) => updateExpenseCategory(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenseCategories"] });

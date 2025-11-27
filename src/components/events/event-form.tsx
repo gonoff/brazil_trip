@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -22,6 +23,14 @@ import {
 } from "@/components/ui/select";
 import { Event, CalendarDay } from "@/types";
 import { format } from "date-fns";
+
+// Format UTC date without timezone conversion
+function formatUTCDate(date: Date | string, formatStr: string): string {
+  const d = new Date(date);
+  // Create a new date using UTC values to avoid timezone shift
+  const utcDate = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  return format(utcDate, formatStr);
+}
 
 const eventSchema = z.object({
   calendarDayId: z.string().min(1, "Date is required"),
@@ -106,6 +115,31 @@ export function EventForm({
   const calendarDayId = watch("calendarDayId");
   const category = watch("category");
 
+  // Reset form when event prop changes (for editing)
+  useEffect(() => {
+    if (event) {
+      reset({
+        calendarDayId: event.calendarDayId.toString(),
+        title: event.title,
+        description: event.description || "",
+        startTime: formatTime(event.startTime),
+        endTime: formatTime(event.endTime),
+        location: event.location || "",
+        category: event.category || "",
+      });
+    } else {
+      reset({
+        calendarDayId: "",
+        title: "",
+        description: "",
+        startTime: "",
+        endTime: "",
+        location: "",
+        category: "",
+      });
+    }
+  }, [event, reset]);
+
   const handleFormSubmit = async (data: EventFormValues) => {
     await onSubmit(data);
     reset();
@@ -144,7 +178,7 @@ export function EventForm({
               <SelectContent>
                 {calendarDays.map((day) => (
                   <SelectItem key={day.id} value={day.id.toString()}>
-                    {format(new Date(day.date), "EEE, MMM d, yyyy")}
+                    {formatUTCDate(day.date, "EEE, MMM d, yyyy")}
                     {day.region && ` - ${day.region.name}`}
                   </SelectItem>
                 ))}

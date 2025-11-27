@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Edit, Trash2, MapPin, Calendar } from "lucide-react";
-import { formatBRL, convertToUSD, formatUSD } from "@/lib/utils";
+import { formatBRL, convertToUSD, formatUSD, formatUTCDate } from "@/lib/utils";
 import { REGIONS, RegionCode } from "@/lib/constants";
 
 interface HotelCardProps {
@@ -17,9 +17,12 @@ interface HotelCardProps {
 }
 
 export function HotelCard({ hotel, onEdit, onDelete, exchangeRate = 5.4 }: HotelCardProps) {
-  const checkIn = new Date(hotel.checkInDate);
-  const checkOut = new Date(hotel.checkOutDate);
-  const nights = differenceInDays(checkOut, checkIn);
+  // Use UTC dates to avoid timezone shift issues
+  const checkInDate = new Date(hotel.checkInDate);
+  const checkOutDate = new Date(hotel.checkOutDate);
+  const checkInUTC = new Date(checkInDate.getUTCFullYear(), checkInDate.getUTCMonth(), checkInDate.getUTCDate());
+  const checkOutUTC = new Date(checkOutDate.getUTCFullYear(), checkOutDate.getUTCMonth(), checkOutDate.getUTCDate());
+  const nights = differenceInDays(checkOutUTC, checkInUTC);
   const regionCode = hotel.region?.code as RegionCode | undefined;
   const region = regionCode ? REGIONS[regionCode] : null;
 
@@ -57,7 +60,7 @@ export function HotelCard({ hotel, onEdit, onDelete, exchangeRate = 5.4 }: Hotel
               <div className="flex items-center gap-4 text-sm">
                 <div className="flex items-center gap-1">
                   <Calendar className="h-3 w-3 text-muted-foreground" />
-                  <span>{format(checkIn, "MMM d")} - {format(checkOut, "MMM d, yyyy")}</span>
+                  <span>{formatUTCDate(hotel.checkInDate, "MMM d")} - {formatUTCDate(hotel.checkOutDate, "MMM d, yyyy")}</span>
                 </div>
                 <Badge variant="outline">{nights} {nights === 1 ? "night" : "nights"}</Badge>
               </div>

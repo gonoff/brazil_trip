@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { differenceInDays } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Hotel } from "@/types";
 import { REGIONS, RegionCode } from "@/lib/constants";
-import { format } from "date-fns";
+import { formatUTCDate } from "@/lib/utils";
 
 const hotelSchema = z.object({
   name: z.string().min(1, "Hotel name is required"),
@@ -71,8 +73,8 @@ export function HotelForm({
           address: hotel.address || "",
           city: hotel.city || "",
           regionId: hotel.regionId?.toString() || "",
-          checkInDate: format(new Date(hotel.checkInDate), "yyyy-MM-dd"),
-          checkOutDate: format(new Date(hotel.checkOutDate), "yyyy-MM-dd"),
+          checkInDate: formatUTCDate(hotel.checkInDate, "yyyy-MM-dd"),
+          checkOutDate: formatUTCDate(hotel.checkOutDate, "yyyy-MM-dd"),
           confirmationNumber: hotel.confirmationNumber || "",
           pricePerNight: hotel.pricePerNight?.toString() || "",
           totalCost: hotel.totalCost?.toString() || "",
@@ -93,6 +95,60 @@ export function HotelForm({
   });
 
   const regionId = watch("regionId");
+  const checkInDate = watch("checkInDate");
+  const checkOutDate = watch("checkOutDate");
+  const pricePerNight = watch("pricePerNight");
+
+  // Calculate number of nights
+  const nights = useMemo(() => {
+    if (!checkInDate || !checkOutDate) return 0;
+    const checkIn = new Date(checkInDate);
+    const checkOut = new Date(checkOutDate);
+    const diff = differenceInDays(checkOut, checkIn);
+    return diff > 0 ? diff : 0;
+  }, [checkInDate, checkOutDate]);
+
+  // Auto-calculate total cost when price per night or nights change
+  useEffect(() => {
+    if (pricePerNight && nights > 0) {
+      const price = parseFloat(pricePerNight);
+      if (!isNaN(price)) {
+        const total = (price * nights).toFixed(2);
+        setValue("totalCost", total);
+      }
+    }
+  }, [pricePerNight, nights, setValue]);
+
+  // Reset form when hotel prop changes (for editing)
+  useEffect(() => {
+    if (hotel) {
+      reset({
+        name: hotel.name,
+        address: hotel.address || "",
+        city: hotel.city || "",
+        regionId: hotel.regionId?.toString() || "",
+        checkInDate: formatUTCDate(hotel.checkInDate, "yyyy-MM-dd"),
+        checkOutDate: formatUTCDate(hotel.checkOutDate, "yyyy-MM-dd"),
+        confirmationNumber: hotel.confirmationNumber || "",
+        pricePerNight: hotel.pricePerNight?.toString() || "",
+        totalCost: hotel.totalCost?.toString() || "",
+        notes: hotel.notes || "",
+      });
+    } else {
+      reset({
+        name: "",
+        address: "",
+        city: "",
+        regionId: "",
+        checkInDate: "",
+        checkOutDate: "",
+        confirmationNumber: "",
+        pricePerNight: "",
+        totalCost: "",
+        notes: "",
+      });
+    }
+  }, [hotel, reset]);
 
   const handleFormSubmit = async (data: HotelFormValues) => {
     await onSubmit(data);
@@ -180,29 +236,30 @@ export function HotelForm({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="pricePerNight">Price/Night (R$)</Label>
-              <Input
-                id="pricePerNight"
-                type="number"
-                step="0.01"
-                {...register("pricePerNight")}
-                placeholder="350.00"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="totalCost">Total Cost (R$)</Label>
-              <Input
-                id="totalCost"
-                type="number"
-                step="0.01"
-                {...register("totalCost")}
-                placeholder="1750.00"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="pricePerNight">Price per Night (R$)</Label>
+            <Input
+              id="pricePerNight"
+              type="number"
+              step="0.01"
+              {...register("pricePerNight")}
+              placeholder="350.00"
+            />
           </div>
+
+          {nights > 0 && (
+            <div className="p-3 bg-muted rounded-lg">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">
+                  {nights} {nights === 1 ? "night" : "nights"}
+                  {pricePerNight && ` × R$ ${parseFloat(pricePerNight).toFixed(2)}`}
+                </span>
+                <span className="font-medium">
+                  Total: R$ {watch("totalCost") || "0.00"}
+                </span>
+              </div>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="notes">Notes</Label>
