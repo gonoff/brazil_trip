@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Brazil Trip Planner - A Next.js application for planning a 1-month trip to Brazil (January 1 - February 7, 2026). Features include:
-- **Calendar**: 38-day calendar with color-coded regions (São Paulo, Minas Gerais, Goiás, Santa Catarina)
-- **Flights**: Track flight bookings with details
-- **Hotels**: Manage accommodation reservations
-- **Expenses**: Track spending with per-category budget limits and warnings
-- **Events**: Schedule activities for specific days
-- **Dashboard**: Overview of trip status, budget, and upcoming events
+Brazil Trip Planner - A Next.js application for planning a trip to Brazil (January 6 - February 3, 2026, 29 days). Features include:
+- **Calendar**: 29-day calendar with color-coded regions (São Paulo, Minas Gerais, Goiás, Santa Catarina), flight/hotel icons
+- **Flights**: Track flight bookings with details (shows departure/arrival icons on calendar)
+- **Hotels**: Manage accommodation reservations with auto-calculated total cost (shows hotel icons on calendar)
+- **Expenses**: Track spending with daily per-person budget limits, warnings, and daily spending tracker
+- **Events**: Schedule activities for specific days (event count badges on calendar)
+- **Dashboard**: Overview of trip status, budget, daily spending tracker, and upcoming events
 
 ## Commands
 
@@ -81,12 +81,12 @@ src/
 
 ### Database Models
 - **Region**: Lookup table for 4 Brazilian regions (seeded)
-- **CalendarDay**: 38 trip days, optionally linked to a region
+- **CalendarDay**: 29 trip days, optionally linked to a region
 - **Flight/Hotel**: Booking records with dates, prices, confirmation numbers
-- **ExpenseCategory**: Categories with per-category budget limits and warning thresholds
+- **ExpenseCategory**: Categories with daily per-person budgets (USD) and warning thresholds
 - **Expense**: Individual expenses linked to category and optionally to a calendar day
 - **Event**: Activities scheduled for specific calendar days
-- **AppSettings**: Singleton for exchange rate and total budget
+- **AppSettings**: Singleton for exchange rate, total budget, and number of travelers
 
 ### Database Setup
 1. Set `DATABASE_URL` in `.env` to your MySQL connection string
@@ -106,3 +106,23 @@ This project is developed on a Steam Deck with the following setup:
   ```javascript
   node -e "const mysql = require('mysql2/promise'); (async () => { const conn = await mysql.createConnection({host: 'localhost', user: 'root'}); await conn.query('CREATE DATABASE IF NOT EXISTS brazil_trip'); await conn.end(); })();"
   ```
+
+## Deployment
+
+This app will be deployed on **Hostinger VPS** with MySQL.
+
+## Important Technical Notes
+
+### Timezone Handling
+- **DATE fields** (calendar days, hotel check-in/out, expense dates): Stored as UTC midnight. Use `formatUTCDate()` from `@/lib/utils` to display correctly without timezone shift.
+- **DATETIME fields** (flight departure/arrival): Stored with time, use regular `format()` from date-fns.
+- The `formatUTCDate()` utility creates a local Date from UTC components to prevent dates appearing off by one day.
+
+### Budget System
+- Daily budgets are set per-person in USD
+- Daily limit calculation: `dailyBudgetPerPerson × exchangeRate × numberOfTravelers`
+- Total budget is set separately in AppSettings (not calculated from daily budgets)
+
+### Form Edit Pattern
+- React Hook Form's `defaultValues` are only read on mount
+- All edit forms use `useEffect` with `reset()` to update when the entity prop changes
