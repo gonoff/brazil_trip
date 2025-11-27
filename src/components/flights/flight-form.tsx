@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Flight } from "@/types";
-import { format } from "date-fns";
+import { getUTCDateTimeLocal } from "@/lib/utils";
 
 const flightSchema = z.object({
   airline: z.string().min(1, "Airline is required"),
@@ -61,8 +61,8 @@ export function FlightForm({
           flightNumber: flight.flightNumber,
           departureCity: flight.departureCity,
           arrivalCity: flight.arrivalCity,
-          departureDatetime: format(new Date(flight.departureDatetime), "yyyy-MM-dd'T'HH:mm"),
-          arrivalDatetime: format(new Date(flight.arrivalDatetime), "yyyy-MM-dd'T'HH:mm"),
+          departureDatetime: getUTCDateTimeLocal(flight.departureDatetime),
+          arrivalDatetime: getUTCDateTimeLocal(flight.arrivalDatetime),
           confirmationNumber: flight.confirmationNumber || "",
           price: flight.price?.toString() || "",
           notes: flight.notes || "",
@@ -88,8 +88,8 @@ export function FlightForm({
         flightNumber: flight.flightNumber,
         departureCity: flight.departureCity,
         arrivalCity: flight.arrivalCity,
-        departureDatetime: format(new Date(flight.departureDatetime), "yyyy-MM-dd'T'HH:mm"),
-        arrivalDatetime: format(new Date(flight.arrivalDatetime), "yyyy-MM-dd'T'HH:mm"),
+        departureDatetime: getUTCDateTimeLocal(flight.departureDatetime),
+        arrivalDatetime: getUTCDateTimeLocal(flight.arrivalDatetime),
         confirmationNumber: flight.confirmationNumber || "",
         price: flight.price?.toString() || "",
         notes: flight.notes || "",

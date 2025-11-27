@@ -24,7 +24,7 @@ import { DailySpendingTracker } from "@/components/expenses/daily-spending-track
 import { NotificationSettings } from "@/components/notification-settings";
 import { TripCountdown } from "@/components/widgets/trip-countdown";
 import { REGIONS, RegionCode, getBudgetStatus, BUDGET_STATUS } from "@/lib/constants";
-import { formatBRL, convertToUSD, formatUSD, formatUTCDate } from "@/lib/utils";
+import { formatBRL, convertToUSD, formatUSD, formatUTCDate, formatUTCDateTime } from "@/lib/utils";
 import { format } from "date-fns";
 
 export function DashboardContent() {
@@ -285,7 +285,7 @@ export function DashboardContent() {
                       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                         <span className="font-medium">
                           {item.type === "flight"
-                            ? format(item.date, "MMM d, yyyy 'at' h:mm a")
+                            ? formatUTCDateTime(item.data.departureDatetime)
                             : formatUTCDate(item.date, "MMM d, yyyy")}
                         </span>
                         <Badge variant="outline" className="text-[10px] py-0">

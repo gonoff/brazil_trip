@@ -1,12 +1,11 @@
 "use client";
 
-import { format } from "date-fns";
 import { Flight } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plane, Edit, Trash2 } from "lucide-react";
-import { formatBRL, convertToUSD, formatUSD } from "@/lib/utils";
+import { formatBRL, convertToUSD, formatUSD, formatUTCDate, formatUTCTime } from "@/lib/utils";
 
 interface FlightCardProps {
   flight: Flight;
@@ -16,9 +15,6 @@ interface FlightCardProps {
 }
 
 export function FlightCard({ flight, onEdit, onDelete, exchangeRate = 5.4 }: FlightCardProps) {
-  const departureDate = new Date(flight.departureDatetime);
-  const arrivalDate = new Date(flight.arrivalDatetime);
-
   return (
     <Card>
       <CardContent className="p-4">
@@ -41,9 +37,9 @@ export function FlightCard({ flight, onEdit, onDelete, exchangeRate = 5.4 }: Fli
               </div>
 
               <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-                <span>{format(departureDate, "MMM d, yyyy")}</span>
+                <span>{formatUTCDate(flight.departureDatetime, "MMM d, yyyy")}</span>
                 <span>
-                  {format(departureDate, "HH:mm")} - {format(arrivalDate, "HH:mm")}
+                  {formatUTCTime(flight.departureDatetime)} - {formatUTCTime(flight.arrivalDatetime)}
                 </span>
               </div>
 

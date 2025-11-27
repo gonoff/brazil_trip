@@ -45,6 +45,9 @@ export async function PUT(request: Request, { params }: RouteParams) {
       notes,
     } = body;
 
+    // Append 'Z' to force UTC interpretation - treat times as local airport time
+    const parseAsUTC = (datetime: string) => new Date(datetime + ":00.000Z");
+
     const flight = await prisma.flight.update({
       where: { id: parseInt(id, 10) },
       data: {
@@ -52,8 +55,8 @@ export async function PUT(request: Request, { params }: RouteParams) {
         flightNumber,
         departureCity,
         arrivalCity,
-        departureDatetime: departureDatetime ? new Date(departureDatetime) : undefined,
-        arrivalDatetime: arrivalDatetime ? new Date(arrivalDatetime) : undefined,
+        departureDatetime: departureDatetime ? parseAsUTC(departureDatetime) : undefined,
+        arrivalDatetime: arrivalDatetime ? parseAsUTC(arrivalDatetime) : undefined,
         confirmationNumber,
         price: price !== undefined ? (price ? parseFloat(price) : null) : undefined,
         currency,
