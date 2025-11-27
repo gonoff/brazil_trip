@@ -6,7 +6,7 @@ import { FlightForm } from "@/components/flights/flight-form";
 import { FlightCard } from "@/components/flights/flight-card";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2, Plane } from "lucide-react";
-import { Flight, FlightFormData } from "@/types";
+import { Flight } from "@/types";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,13 +28,22 @@ export default function FlightsPage() {
   const [editingFlight, setEditingFlight] = useState<Flight | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
 
-  const handleCreate = async (data: FlightFormData) => {
-    await createFlight.mutateAsync(data);
+  const handleCreate = async (data: { airline: string; flightNumber: string; departureCity: string; arrivalCity: string; departureDatetime: string; arrivalDatetime: string; confirmationNumber?: string; price?: string; notes?: string }) => {
+    await createFlight.mutateAsync({
+      ...data,
+      price: data.price ? parseFloat(data.price) : undefined,
+    });
   };
 
-  const handleUpdate = async (data: FlightFormData) => {
+  const handleUpdate = async (data: { airline: string; flightNumber: string; departureCity: string; arrivalCity: string; departureDatetime: string; arrivalDatetime: string; confirmationNumber?: string; price?: string; notes?: string }) => {
     if (!editingFlight) return;
-    await updateFlight.mutateAsync({ id: editingFlight.id, data });
+    await updateFlight.mutateAsync({
+      id: editingFlight.id,
+      data: {
+        ...data,
+        price: data.price ? parseFloat(data.price) : undefined,
+      },
+    });
     setEditingFlight(null);
   };
 

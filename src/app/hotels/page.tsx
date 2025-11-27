@@ -6,7 +6,7 @@ import { HotelForm } from "@/components/hotels/hotel-form";
 import { HotelCard } from "@/components/hotels/hotel-card";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2, Building2 } from "lucide-react";
-import { Hotel, HotelFormData } from "@/types";
+import { Hotel } from "@/types";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,18 +28,38 @@ export default function HotelsPage() {
   const [editingHotel, setEditingHotel] = useState<Hotel | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
 
-  const handleCreate = async (data: HotelFormData) => {
-    // Convert regionId from region code to actual ID if needed
-    const submitData = { ...data };
-    if (data.regionId && isNaN(Number(data.regionId))) {
-      // It's a region code, we'll let the API handle it
-    }
-    await createHotel.mutateAsync(submitData);
+  const handleCreate = async (data: { name: string; checkInDate: string; checkOutDate: string; address?: string; city?: string; regionId?: string; confirmationNumber?: string; pricePerNight?: string; totalCost?: string; notes?: string }) => {
+    await createHotel.mutateAsync({
+      name: data.name,
+      checkInDate: data.checkInDate,
+      checkOutDate: data.checkOutDate,
+      address: data.address,
+      city: data.city,
+      regionId: data.regionId ? parseInt(data.regionId, 10) : undefined,
+      confirmationNumber: data.confirmationNumber,
+      pricePerNight: data.pricePerNight ? parseFloat(data.pricePerNight) : undefined,
+      totalCost: data.totalCost ? parseFloat(data.totalCost) : undefined,
+      notes: data.notes,
+    });
   };
 
-  const handleUpdate = async (data: HotelFormData) => {
+  const handleUpdate = async (data: { name: string; checkInDate: string; checkOutDate: string; address?: string; city?: string; regionId?: string; confirmationNumber?: string; pricePerNight?: string; totalCost?: string; notes?: string }) => {
     if (!editingHotel) return;
-    await updateHotel.mutateAsync({ id: editingHotel.id, data });
+    await updateHotel.mutateAsync({
+      id: editingHotel.id,
+      data: {
+        name: data.name,
+        checkInDate: data.checkInDate,
+        checkOutDate: data.checkOutDate,
+        address: data.address,
+        city: data.city,
+        regionId: data.regionId ? parseInt(data.regionId, 10) : undefined,
+        confirmationNumber: data.confirmationNumber,
+        pricePerNight: data.pricePerNight ? parseFloat(data.pricePerNight) : undefined,
+        totalCost: data.totalCost ? parseFloat(data.totalCost) : undefined,
+        notes: data.notes,
+      },
+    });
     setEditingHotel(null);
   };
 

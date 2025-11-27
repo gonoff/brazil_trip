@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Loader2, Wallet, Edit, Trash2 } from "lucide-react";
-import { Expense, ExpenseFormData } from "@/types";
+import { Expense } from "@/types";
 import { formatBRL, convertToUSD, formatUSD, formatUTCDate } from "@/lib/utils";
 import {
   AlertDialog,
@@ -48,13 +48,26 @@ export default function ExpensesPage() {
 
   const exchangeRate = settings?.exchangeRate ?? 5.4;
 
-  const handleCreate = async (data: ExpenseFormData) => {
-    await createExpense.mutateAsync(data);
+  const handleCreate = async (data: { date: string; amountBrl: string; categoryId: string; description?: string }) => {
+    await createExpense.mutateAsync({
+      date: data.date,
+      amountBrl: parseFloat(data.amountBrl),
+      categoryId: parseInt(data.categoryId, 10),
+      description: data.description,
+    });
   };
 
-  const handleUpdate = async (data: ExpenseFormData) => {
+  const handleUpdate = async (data: { date: string; amountBrl: string; categoryId: string; description?: string }) => {
     if (!editingExpense) return;
-    await updateExpense.mutateAsync({ id: editingExpense.id, data });
+    await updateExpense.mutateAsync({
+      id: editingExpense.id,
+      data: {
+        date: data.date,
+        amountBrl: parseFloat(data.amountBrl),
+        categoryId: parseInt(data.categoryId, 10),
+        description: data.description,
+      },
+    });
     setEditingExpense(null);
   };
 

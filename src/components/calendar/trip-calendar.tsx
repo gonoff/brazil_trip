@@ -175,7 +175,7 @@ export function TripCalendar({
               calendarDay={calendarDay}
               date={date}
               onSelectRegion={handleSelectRegion}
-              open={popoverOpen && isSelected}
+              open={popoverOpen && !!isSelected}
               onOpenChange={(open) => {
                 if (!open) setPopoverOpen(false);
               }}
@@ -185,7 +185,7 @@ export function TripCalendar({
                   date={date}
                   calendarDay={calendarDay}
                   currentMonth={currentMonth}
-                  isSelected={isSelected}
+                  isSelected={isSelected ?? false}
                   onClick={() => handleDayClick(date)}
                 />
               </div>

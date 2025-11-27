@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Loader2, CalendarCheck, Edit, Trash2, Clock, MapPin } from "lucide-react";
-import { Event, EventFormData } from "@/types";
+import { Event } from "@/types";
 import { formatUTCDate } from "@/lib/utils";
 import { format } from "date-fns";
 import {
@@ -34,13 +34,22 @@ export default function EventsPage() {
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
 
-  const handleCreate = async (data: EventFormData) => {
-    await createEvent.mutateAsync(data);
+  const handleCreate = async (data: { calendarDayId: string; title: string; description?: string; startTime?: string; endTime?: string; location?: string; category?: string }) => {
+    await createEvent.mutateAsync({
+      ...data,
+      calendarDayId: parseInt(data.calendarDayId, 10),
+    });
   };
 
-  const handleUpdate = async (data: EventFormData) => {
+  const handleUpdate = async (data: { calendarDayId: string; title: string; description?: string; startTime?: string; endTime?: string; location?: string; category?: string }) => {
     if (!editingEvent) return;
-    await updateEvent.mutateAsync({ id: editingEvent.id, data });
+    await updateEvent.mutateAsync({
+      id: editingEvent.id,
+      data: {
+        ...data,
+        calendarDayId: parseInt(data.calendarDayId, 10),
+      },
+    });
     setEditingEvent(null);
   };
 
