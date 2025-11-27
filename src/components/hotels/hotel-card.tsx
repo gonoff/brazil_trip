@@ -29,14 +29,14 @@ export function HotelCard({ hotel, onEdit, onDelete, exchangeRate = 5.4 }: Hotel
   return (
     <Card>
       <CardContent className="p-4">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10">
               <Building2 className="h-5 w-5 text-accent" />
             </div>
 
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
+            <div className="space-y-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="font-semibold">{hotel.name}</span>
                 {region && (
                   <Badge
@@ -49,17 +49,17 @@ export function HotelCard({ hotel, onEdit, onDelete, exchangeRate = 5.4 }: Hotel
 
               {(hotel.city || hotel.address) && (
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <MapPin className="h-3 w-3" />
-                  <span>
+                  <MapPin className="h-3 w-3 shrink-0" />
+                  <span className="truncate">
                     {hotel.city}
                     {hotel.address && ` - ${hotel.address}`}
                   </span>
                 </div>
               )}
 
-              <div className="flex items-center gap-4 text-sm">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm">
                 <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3 text-muted-foreground" />
+                  <Calendar className="h-3 w-3 text-muted-foreground shrink-0" />
                   <span>{formatUTCDate(hotel.checkInDate, "MMM d")} - {formatUTCDate(hotel.checkOutDate, "MMM d, yyyy")}</span>
                 </div>
                 <Badge variant="outline">{nights} {nights === 1 ? "night" : "nights"}</Badge>
@@ -72,7 +72,7 @@ export function HotelCard({ hotel, onEdit, onDelete, exchangeRate = 5.4 }: Hotel
                 </div>
               )}
 
-              <div className="flex gap-4 text-sm">
+              <div className="flex flex-wrap gap-2 sm:gap-4 text-sm">
                 {hotel.pricePerNight && (
                   <div>
                     <span className="text-muted-foreground">Per night: </span>
@@ -96,7 +96,7 @@ export function HotelCard({ hotel, onEdit, onDelete, exchangeRate = 5.4 }: Hotel
             </div>
           </div>
 
-          <div className="flex gap-1">
+          <div className="flex gap-1 self-end sm:self-start shrink-0">
             <Button variant="ghost" size="icon" onClick={onEdit}>
               <Edit className="h-4 w-4" />
             </Button>

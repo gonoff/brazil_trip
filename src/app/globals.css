@@ -140,3 +140,25 @@ body {
 .border-region-minas-gerais { border-color: var(--region-minas-gerais); }
 .border-region-goias { border-color: var(--region-goias); }
 .border-region-santa-catarina { border-color: var(--region-santa-catarina); }
+
+/* Safe area support for iOS notched devices */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+/* Prevent horizontal overflow on mobile */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Better mobile container padding */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

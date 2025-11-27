@@ -172,7 +172,7 @@ export function HotelForm({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="city">City</Label>
               <Input id="city" {...register("city")} placeholder="São Paulo" />
@@ -209,7 +209,7 @@ export function HotelForm({
             <Input id="address" {...register("address")} placeholder="Rua Vittorio Fasano, 88" />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="checkInDate">Check-in</Label>
               <Input id="checkInDate" type="date" {...register("checkInDate")} />

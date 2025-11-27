@@ -36,7 +36,7 @@ export function CalendarDayCell({
     <button
       onClick={onClick}
       className={cn(
-        "relative flex flex-col items-center justify-start p-2 min-h-[80px] border border-border rounded-lg transition-all",
+        "relative flex flex-col items-center justify-start p-1 md:p-2 min-h-[60px] md:min-h-[80px] border border-border rounded-lg transition-all",
         "hover:ring-2 hover:ring-primary hover:ring-offset-1",
         !isCurrentMonth && "opacity-40",
         isSelected && "ring-2 ring-primary ring-offset-2",
@@ -48,7 +48,7 @@ export function CalendarDayCell({
     >
       <span
         className={cn(
-          "text-sm font-medium",
+          "text-xs md:text-sm font-medium",
           region ? "text-white" : "text-foreground"
         )}
       >
@@ -56,17 +56,17 @@ export function CalendarDayCell({
       </span>
 
       {region && (
-        <span className="text-xs mt-1 opacity-90 truncate w-full text-center">
+        <span className="hidden md:block text-xs mt-1 opacity-90 truncate w-full text-center">
           {region.name.split(" ")[0]}
         </span>
       )}
 
       {/* Icons row for flights and hotels */}
-      <div className="flex items-center gap-0.5 mt-auto mb-1">
+      <div className="flex items-center gap-0.5 mt-auto mb-0.5 md:mb-1">
         {hasFlightDeparture && (
           <PlaneTakeoff
             className={cn(
-              "h-3.5 w-3.5",
+              "h-3 w-3 md:h-3.5 md:w-3.5",
               region ? "text-white/90" : "text-blue-500"
             )}
           />
@@ -74,7 +74,7 @@ export function CalendarDayCell({
         {hasFlightArrival && (
           <PlaneLanding
             className={cn(
-              "h-3.5 w-3.5",
+              "h-3 w-3 md:h-3.5 md:w-3.5",
               region ? "text-white/90" : "text-blue-500"
             )}
           />
@@ -82,7 +82,7 @@ export function CalendarDayCell({
         {(hasHotelCheckIn || hasHotelStay) && (
           <Building2
             className={cn(
-              "h-3.5 w-3.5",
+              "h-3 w-3 md:h-3.5 md:w-3.5",
               hasHotelCheckIn
                 ? (region ? "text-white" : "text-amber-600")
                 : (region ? "text-white/70" : "text-amber-400")
@@ -94,7 +94,7 @@ export function CalendarDayCell({
       {eventsCount > 0 && (
         <div
           className={cn(
-            "absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
+            "absolute bottom-0.5 right-0.5 md:bottom-1 md:right-1 flex h-4 w-4 md:h-5 md:w-5 items-center justify-center rounded-full text-[10px] md:text-xs font-medium",
             region ? "bg-white/20 text-white" : "bg-primary text-primary-foreground"
           )}
         >
@@ -105,7 +105,7 @@ export function CalendarDayCell({
       {calendarDay?.notes && (
         <div
           className={cn(
-            "absolute top-1 right-1 h-2 w-2 rounded-full",
+            "absolute top-0.5 right-0.5 md:top-1 md:right-1 h-1.5 w-1.5 md:h-2 md:w-2 rounded-full",
             region ? "bg-white/50" : "bg-accent"
           )}
         />

@@ -6,7 +6,9 @@
       "Bash(flatpak-spawn --host ps:*)",
       "Bash(npm run db:push:*)",
       "Bash(npm run db:seed:*)",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(find:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

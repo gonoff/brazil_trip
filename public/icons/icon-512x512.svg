@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#FBBF24" rx="76.8"/>
+  
+  <!-- Green diamond -->
+  <polygon points="256,76.8 435.2,256 256,435.2 76.8,256" fill="#166534"/>
+  
+  <!-- Blue circle -->
+  <circle cx="256" cy="256" r="112.64" fill="#1E40AF"/>
+  
+  <!-- White airplane silhouette -->
+  <g transform="translate(256, 256) scale(1)">
+    <path d="M-60,-15 L60,-15 L80,0 L60,15 L-60,15 L-80,0 Z M-20,-50 L20,-50 L20,-15 L-20,-15 Z M-20,15 L20,15 L20,50 L-20,50 Z" fill="white" opacity="0.9"/>
+  </g>
+</svg>

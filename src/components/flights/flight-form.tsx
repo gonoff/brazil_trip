@@ -123,7 +123,7 @@ export function FlightForm({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="airline">Airline</Label>
               <Input id="airline" {...register("airline")} placeholder="LATAM" />
@@ -141,7 +141,7 @@ export function FlightForm({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="departureCity">From</Label>
               <Input id="departureCity" {...register("departureCity")} placeholder="São Paulo (GRU)" />
@@ -159,7 +159,7 @@ export function FlightForm({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="departureDatetime">Departure</Label>
               <Input
@@ -185,7 +185,7 @@ export function FlightForm({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="confirmationNumber">Confirmation #</Label>
               <Input

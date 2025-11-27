@@ -126,18 +126,18 @@ export default function ExpensesPage() {
               {expenses.map((expense) => (
                 <Card key={expense.id}>
                   <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div className="flex items-center gap-3 sm:gap-4">
                         <div
-                          className="h-10 w-10 rounded-full flex items-center justify-center"
+                          className="h-10 w-10 shrink-0 rounded-full flex items-center justify-center"
                           style={{
                             backgroundColor: expense.category?.colorHex || "#666",
                           }}
                         >
                           <Wallet className="h-5 w-5 text-white" />
                         </div>
-                        <div>
-                          <div className="flex items-center gap-2">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
                             <span className="font-medium">
                               {formatBRL(Number(expense.amountBrl))}
                             </span>
@@ -149,7 +149,7 @@ export default function ExpensesPage() {
                             </Badge>
                           </div>
                           {expense.description && (
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-muted-foreground truncate">
                               {expense.description}
                             </p>
                           )}
@@ -158,7 +158,7 @@ export default function ExpensesPage() {
                           </p>
                         </div>
                       </div>
-                      <div className="flex gap-1">
+                      <div className="flex gap-1 self-end sm:self-center shrink-0">
                         <Button
                           variant="ghost"
                           size="icon"

@@ -138,14 +138,14 @@ export default function EventsPage() {
                   {dayEvents.map((event) => (
                     <Card key={event.id}>
                       <CardContent className="p-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-start gap-4">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                          <div className="flex items-start gap-3 sm:gap-4">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
                               <CalendarCheck className="h-5 w-5 text-primary" />
                             </div>
 
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
+                            <div className="space-y-1 min-w-0">
+                              <div className="flex flex-wrap items-center gap-2">
                                 <span className="font-semibold">{event.title}</span>
                                 {event.category && (
                                   <Badge variant="outline">{event.category}</Badge>
@@ -154,7 +154,7 @@ export default function EventsPage() {
 
                               {(event.startTime || event.endTime) && (
                                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                  <Clock className="h-3 w-3" />
+                                  <Clock className="h-3 w-3 shrink-0" />
                                   <span>
                                     {formatTime(event.startTime)}
                                     {event.endTime && ` - ${formatTime(event.endTime)}`}
@@ -164,8 +164,8 @@ export default function EventsPage() {
 
                               {event.location && (
                                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                  <MapPin className="h-3 w-3" />
-                                  <span>{event.location}</span>
+                                  <MapPin className="h-3 w-3 shrink-0" />
+                                  <span className="truncate">{event.location}</span>
                                 </div>
                               )}
 
@@ -177,7 +177,7 @@ export default function EventsPage() {
                             </div>
                           </div>
 
-                          <div className="flex gap-1">
+                          <div className="flex gap-1 self-end sm:self-start shrink-0">
                             <Button
                               variant="ghost"
                               size="icon"

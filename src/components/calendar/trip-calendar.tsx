@@ -137,19 +137,20 @@ export function TripCalendar({
       </div>
 
       {/* Weekday headers */}
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7 gap-1 md:gap-2">
         {WEEKDAYS.map((day) => (
           <div
             key={day}
-            className="text-center text-sm font-medium text-muted-foreground py-2"
+            className="text-center text-xs md:text-sm font-medium text-muted-foreground py-1 md:py-2"
           >
-            {day}
+            <span className="hidden md:inline">{day}</span>
+            <span className="md:hidden">{day[0]}</span>
           </div>
         ))}
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7 gap-1 md:gap-2">
         {calendarGrid.map((date, index) => {
           const calendarDay = getCalendarDay(date);
           const isSelected = selectedDate && isSameDay(date, selectedDate);
@@ -160,9 +161,9 @@ export function TripCalendar({
             return (
               <div
                 key={index}
-                className="min-h-[80px] p-2 border border-border/50 rounded-lg bg-muted/30 opacity-30"
+                className="min-h-[60px] md:min-h-[80px] p-1 md:p-2 border border-border/50 rounded-lg bg-muted/30 opacity-30"
               >
-                <span className="text-sm text-muted-foreground">
+                <span className="text-xs md:text-sm text-muted-foreground">
                   {format(date, "d")}
                 </span>
               </div>
