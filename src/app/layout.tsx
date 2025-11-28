@@ -68,16 +68,16 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <AuthProvider>
-            <Providers>
-              <AuthGate>
+            <AuthGate>
+              <Providers>
                 <OfflineIndicator />
                 <MobileHeader />
                 <Header />
                 <main className="container mx-auto px-4 py-6 pb-24 md:pb-6">{children}</main>
                 <FloatingActionButton />
                 <BottomNav />
-              </AuthGate>
-            </Providers>
+              </Providers>
+            </AuthGate>
           </AuthProvider>
         </ThemeProvider>
       </body>
