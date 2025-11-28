@@ -7,6 +7,8 @@ import { BottomNav } from "@/components/layout/bottom-nav";
 import { OfflineIndicator } from "@/components/offline-indicator";
 import { Providers } from "@/components/providers";
 import { ThemeProvider } from "@/contexts/theme-context";
+import { AuthProvider } from "@/contexts/auth-context";
+import { AuthGate } from "@/components/auth-gate";
 import { FloatingActionButton } from "@/components/widgets/floating-action-button";
 
 const unbounded = Unbounded({
@@ -65,14 +67,18 @@ export default function RootLayout({
         className={`${unbounded.variable} ${geistMono.variable} font-sans antialiased min-h-screen`}
       >
         <ThemeProvider>
-          <Providers>
-            <OfflineIndicator />
-            <MobileHeader />
-            <Header />
-            <main className="container mx-auto px-4 py-6 pb-24 md:pb-6">{children}</main>
-            <FloatingActionButton />
-            <BottomNav />
-          </Providers>
+          <AuthProvider>
+            <Providers>
+              <AuthGate>
+                <OfflineIndicator />
+                <MobileHeader />
+                <Header />
+                <main className="container mx-auto px-4 py-6 pb-24 md:pb-6">{children}</main>
+                <FloatingActionButton />
+                <BottomNav />
+              </AuthGate>
+            </Providers>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

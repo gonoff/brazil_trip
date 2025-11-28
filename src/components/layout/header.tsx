@@ -9,11 +9,14 @@ import {
   Building2,
   Wallet,
   CalendarCheck,
+  Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CurrencyConverter } from "@/components/widgets/currency-converter";
 import { SearchCommand } from "@/components/widgets/search-command";
+import { useAuth } from "@/contexts/auth-context";
+import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -26,6 +29,7 @@ const navLinks = [
 
 export function Header() {
   const pathname = usePathname();
+  const { lock } = useAuth();
 
   return (
     <header className="hidden md:block sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -66,6 +70,14 @@ export function Header() {
           <SearchCommand />
           <CurrencyConverter />
           <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={lock}
+            title="Lock app"
+          >
+            <Lock className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </header>
