@@ -8,9 +8,7 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
-  // Use webpack for production builds (required for Serwist/PWA)
-  // Turbopack is still used in development mode
-  turbopack: {},
+  // Serwist requires webpack, not Turbopack
 };
 
 export default withSerwist(nextConfig);

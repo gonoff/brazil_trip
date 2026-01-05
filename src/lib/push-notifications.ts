@@ -19,6 +19,30 @@ function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
 }
 
 /**
+ * Wait for service worker to be ready with a timeout.
+ */
+async function waitForServiceWorker(timeoutMs: number = 5000): Promise<ServiceWorkerRegistration | null> {
+  if (!("serviceWorker" in navigator)) {
+    return null;
+  }
+
+  // First check if there's already a registration
+  const existingReg = await navigator.serviceWorker.getRegistration();
+  if (existingReg?.active) {
+    return existingReg;
+  }
+
+  // Wait for ready with timeout
+  const timeoutPromise = new Promise<null>((resolve) => {
+    setTimeout(() => resolve(null), timeoutMs);
+  });
+
+  const readyPromise = navigator.serviceWorker.ready;
+
+  return Promise.race([readyPromise, timeoutPromise]);
+}
+
+/**
  * Check if push notifications are supported in this browser.
  */
 export function isPushSupported(): boolean {
@@ -63,7 +87,12 @@ export async function subscribeToPush(): Promise<PushSubscription | null> {
   }
 
   try {
-    const registration = await navigator.serviceWorker.ready;
+    const registration = await waitForServiceWorker(5000);
+
+    if (!registration) {
+      console.error("Service worker not available - make sure you're using HTTPS or localhost");
+      return null;
+    }
 
     // Get VAPID public key from server
     const response = await fetch("/api/push/vapid-public-key");
@@ -115,7 +144,11 @@ export async function unsubscribeFromPush(): Promise<boolean> {
   }
 
   try {
-    const registration = await navigator.serviceWorker.ready;
+    const registration = await waitForServiceWorker(5000);
+    if (!registration) {
+      return false;
+    }
+
     const subscription = await registration.pushManager.getSubscription();
 
     if (subscription) {
@@ -146,7 +179,10 @@ export async function getCurrentSubscription(): Promise<PushSubscription | null>
   }
 
   try {
-    const registration = await navigator.serviceWorker.ready;
+    const registration = await waitForServiceWorker(3000);
+    if (!registration) {
+      return null;
+    }
     return await registration.pushManager.getSubscription();
   } catch (error) {
     console.error("Failed to get current subscription:", error);
