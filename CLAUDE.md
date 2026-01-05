@@ -80,8 +80,7 @@ src/
 ├── contexts/              # React contexts (theme)
 ├── hooks/                 # React Query hooks for data fetching + useSearch
 ├── lib/                   # Utilities (db, utils, constants)
-├── types/                 # TypeScript interfaces
-└── generated/prisma/      # Generated Prisma client
+└── types/                 # TypeScript interfaces
 ```
 
 ### Key Patterns
@@ -89,7 +88,7 @@ src/
 - API routes return JSON, handle CRUD operations
 - React Query hooks in `src/hooks/` for each entity
 - Currency: All amounts in BRL with USD conversion (default rate: 5.4)
-- Region colors: São Paulo (yellow #FBBF24), Minas Gerais (green #166534), Goiás (blue #1E40AF), Santa Catarina (orange #F97316)
+- Region colors (earthy tones): São Paulo (#C9A227 golden ochre), Minas Gerais (#2D5A3D forest green), Goiás (#8B6914 bronze), Santa Catarina (#B85C38 terracotta)
 
 ### Data Flow
 1. **Frontend**: React components use custom hooks from `src/hooks/`
@@ -160,8 +159,9 @@ NODE_ENV="production"
 
 ### Timezone Handling
 - **DATE fields** (calendar days, hotel check-in/out, expense dates): Stored as UTC midnight. Use `formatUTCDate()` from `@/lib/utils` to display correctly without timezone shift.
-- **DATETIME fields** (flight departure/arrival): Stored with time, use regular `format()` from date-fns.
+- **DATETIME fields** (flight departure/arrival): Flight times represent local airport time but are stored as UTC. Use `formatUTCTime()` and `formatUTCDateTime()` from `@/lib/utils`.
 - The `formatUTCDate()` utility creates a local Date from UTC components to prevent dates appearing off by one day.
+- Use `getUTCDateTimeLocal()` for pre-populating datetime-local form inputs with UTC values.
 
 ### Budget System
 - Daily budgets are set per-person in USD

@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Loader2, CalendarCheck, Edit, Trash2, Clock, MapPin } from "lucide-react";
 import { Event } from "@/types";
 import { formatUTCDate } from "@/lib/utils";
-import { format } from "date-fns";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,7 +61,13 @@ export default function EventsPage() {
   const formatTime = (time: string | null) => {
     if (!time) return null;
     try {
-      return format(new Date(time), "h:mm a");
+      const date = new Date(time);
+      // Use UTC to avoid timezone conversion issues
+      const hours = date.getUTCHours();
+      const minutes = date.getUTCMinutes();
+      const ampm = hours >= 12 ? "PM" : "AM";
+      const hours12 = hours % 12 || 12;
+      return `${hours12}:${minutes.toString().padStart(2, "0")} ${ampm}`;
     } catch {
       return time;
     }

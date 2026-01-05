@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
-  Plane,
   Building2,
   CalendarCheck,
   Loader2,
@@ -25,7 +24,6 @@ import { NotificationSettings } from "@/components/notification-settings";
 import { TripCountdown } from "@/components/widgets/trip-countdown";
 import { REGIONS, RegionCode, getBudgetStatus, BUDGET_STATUS } from "@/lib/constants";
 import { formatBRL, convertToUSD, formatUSD, formatUTCDate, formatUTCDateTime } from "@/lib/utils";
-import { format } from "date-fns";
 
 export function DashboardContent() {
   const { data: stats, isLoading, error } = useDashboard();
@@ -39,15 +37,24 @@ export function DashboardContent() {
   const travelTimeline = (() => {
     const items: Array<{
       type: "flight" | "hotel-checkin" | "hotel-checkout";
-      date: Date;
+      sortKey: string; // YYYY-MM-DD + priority for sorting
+      displayDate: Date;
       data: any;
     }> = [];
 
+    // Priority within same day: check-out (1) → flight (2) → check-in (3)
+    const PRIORITY = { checkout: 1, flight: 2, checkin: 3 };
+
     if (flights) {
       flights.forEach((flight) => {
+        const depDate = new Date(flight.departureDatetime);
+        const dateStr = `${depDate.getUTCFullYear()}-${String(depDate.getUTCMonth() + 1).padStart(2, '0')}-${String(depDate.getUTCDate()).padStart(2, '0')}`;
+
+        // Each flight appears ONCE on departure date
         items.push({
           type: "flight",
-          date: new Date(flight.departureDatetime),
+          sortKey: `${dateStr}-${PRIORITY.flight}`,
+          displayDate: depDate,
           data: flight,
         });
       });
@@ -55,20 +62,29 @@ export function DashboardContent() {
 
     if (hotels) {
       hotels.forEach((hotel) => {
+        const checkInDate = new Date(hotel.checkInDate);
+        const checkOutDate = new Date(hotel.checkOutDate);
+
+        const inDateStr = `${checkInDate.getUTCFullYear()}-${String(checkInDate.getUTCMonth() + 1).padStart(2, '0')}-${String(checkInDate.getUTCDate()).padStart(2, '0')}`;
+        const outDateStr = `${checkOutDate.getUTCFullYear()}-${String(checkOutDate.getUTCMonth() + 1).padStart(2, '0')}-${String(checkOutDate.getUTCDate()).padStart(2, '0')}`;
+
         items.push({
           type: "hotel-checkin",
-          date: new Date(hotel.checkInDate),
+          sortKey: `${inDateStr}-${PRIORITY.checkin}`,
+          displayDate: checkInDate,
           data: hotel,
         });
         items.push({
           type: "hotel-checkout",
-          date: new Date(hotel.checkOutDate),
+          sortKey: `${outDateStr}-${PRIORITY.checkout}`,
+          displayDate: checkOutDate,
           data: hotel,
         });
       });
     }
 
-    return items.sort((a, b) => a.date.getTime() - b.date.getTime());
+    // Sort by sortKey (date + priority)
+    return items.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
   })();
 
   if (isLoading) {
@@ -227,7 +243,14 @@ export function DashboardContent() {
                         {event.startTime && (
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
-                            {format(new Date(event.startTime), "h:mm a")}
+                            {(() => {
+                              const d = new Date(event.startTime);
+                              const hours = d.getUTCHours();
+                              const minutes = d.getUTCMinutes();
+                              const ampm = hours >= 12 ? "PM" : "AM";
+                              const hours12 = hours % 12 || 12;
+                              return `${hours12}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+                            })()}
                           </span>
                         )}
                       </div>
@@ -275,7 +298,7 @@ export function DashboardContent() {
                         ? "bg-primary"
                         : "bg-muted-foreground"
                     }`}>
-                      {item.type === "flight" && <Plane className="h-3 w-3 text-white" />}
+                      {item.type === "flight" && <PlaneTakeoff className="h-3 w-3 text-white" />}
                       {item.type === "hotel-checkin" && <LogIn className="h-3 w-3 text-white" />}
                       {item.type === "hotel-checkout" && <LogOut className="h-3 w-3 text-white" />}
                     </div>
@@ -285,8 +308,8 @@ export function DashboardContent() {
                       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                         <span className="font-medium">
                           {item.type === "flight"
-                            ? formatUTCDateTime(item.data.departureDatetime)
-                            : formatUTCDate(item.date, "MMM d, yyyy")}
+                            ? formatUTCDate(item.displayDate, "MMM d, yyyy")
+                            : formatUTCDate(item.displayDate, "MMM d, yyyy")}
                         </span>
                         <Badge variant="outline" className="text-[10px] py-0">
                           {item.type === "flight" ? "Flight" : item.type === "hotel-checkin" ? "Check-in" : "Check-out"}

@@ -76,7 +76,10 @@ export function EventForm({
     if (!time) return "";
     try {
       const date = new Date(time);
-      return format(date, "HH:mm");
+      // Use UTC hours/minutes to avoid timezone conversion issues
+      const hours = date.getUTCHours().toString().padStart(2, "0");
+      const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+      return `${hours}:${minutes}`;
     } catch {
       return time;
     }

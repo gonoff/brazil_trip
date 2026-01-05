@@ -53,11 +53,12 @@ export async function PUT(request: Request, { params }: RouteParams) {
         calendarDayId: calendarDayId ? parseInt(calendarDayId, 10) : undefined,
         title,
         description,
+        // Use Z suffix to parse time as UTC, avoiding timezone conversion issues
         startTime: startTime !== undefined
-          ? (startTime ? new Date(`1970-01-01T${startTime}:00`) : null)
+          ? (startTime ? new Date(`1970-01-01T${startTime}:00Z`) : null)
           : undefined,
         endTime: endTime !== undefined
-          ? (endTime ? new Date(`1970-01-01T${endTime}:00`) : null)
+          ? (endTime ? new Date(`1970-01-01T${endTime}:00Z`) : null)
           : undefined,
         location,
         category,
